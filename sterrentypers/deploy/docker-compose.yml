@@ -1,0 +1,39 @@
+# Sterrentypers met automatische HTTPS (Caddy + Let's Encrypt).
+# Gebruik: kopieer .env.example naar .env, vul het in en start met: docker compose up -d --build
+services:
+  app:
+    build: ..
+    restart: unless-stopped
+    environment:
+      COOKIE_SECURE: "1"
+      TRUST_PROXY: "1"
+      SIGNUP_CODE: ${SIGNUP_CODE:?Vul SIGNUP_CODE in in het bestand .env}
+      TZ_SCHOOL: ${TZ_SCHOOL:-Europe/Amsterdam}
+    volumes:
+      - data:/app/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMEIN: ${DOMEIN:?Vul DOMEIN in in het bestand .env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  data:
+  caddy_data:
+  caddy_config:

@@ -11,7 +11,8 @@
     "start": "node --no-warnings=ExperimentalWarning server.js",
     "dev": "node --no-warnings=ExperimentalWarning --watch server.js",
     "test": "node --no-warnings=ExperimentalWarning --test test/*.test.js",
-    "demo": "node --no-warnings=ExperimentalWarning scripts/seed-demo.js"
+    "demo": "node --no-warnings=ExperimentalWarning scripts/seed-demo.js",
+    "backup": "node --no-warnings=ExperimentalWarning scripts/backup.js"
   },
   "license": "UNLICENSED"
 }

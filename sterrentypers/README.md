@@ -77,15 +77,16 @@ Demo-inlog: leerkracht `demo@sterrentypers.nl` / `sterrentypers`; leerlingen Gro
 
 ### Online zetten (thuis én op school)
 
-Zet de app op een server met HTTPS (bijv. achter Caddy of nginx) zodat leerlingen ook thuis kunnen inloggen:
+In `deploy/` staat een kant-en-klare opstelling met automatische HTTPS (Caddy + Let's Encrypt):
 
 ```bash
-docker build -t sterrentypers .
-docker run -d -p 3000:3000 -v sterrentypers-data:/app/data \
-  -e COOKIE_SECURE=1 -e TRUST_PROXY=1 -e SIGNUP_CODE=kies-een-code sterrentypers
+cd sterrentypers/deploy
+cp .env.example .env        # vul DOMEIN en SIGNUP_CODE in
+docker compose up -d --build
 ```
 
-Maak regelmatig een back-up van de map `data/`.
+Back-up maken (ook terwijl de app draait): `docker compose exec app npm run backup`
+(buiten Docker: `npm run backup`). Er worden 14 kopieën bewaard in `data/backups/`.
 
 ## Privacy en veiligheid
 

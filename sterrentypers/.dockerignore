@@ -1,5 +1,6 @@
 node_modules
 data
-video/out
+video
 test
+deploy
 *.db*
