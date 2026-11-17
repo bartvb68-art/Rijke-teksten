@@ -19,9 +19,16 @@ const target = path.join(dir, `sterrentypers-${stamp}.db`);
 const db = new DatabaseSync(DB_FILE);
 await backup(db, target);
 db.close();
-const check = new DatabaseSync(target, { readOnly: true });
+// Zet de kopie om naar één los bestand (geen -wal/-shm ernaast) en controleer de inhoud.
+const check = new DatabaseSync(target);
+check.exec('PRAGMA journal_mode = DELETE;');
+const ok = check.prepare('PRAGMA integrity_check').get().integrity_check;
 const students = check.prepare('SELECT COUNT(*) AS n FROM students').get().n;
 check.close();
+if (ok !== 'ok') {
+  console.error(`Controle van de back-up mislukt: ${ok}`);
+  process.exit(1);
+}
 console.log(`Back-up gemaakt: ${target} (${students} leerlingen)`);
 
 const old = fs.readdirSync(dir).filter((f) => /^sterrentypers-.*\.db$/.test(f)).sort().reverse().slice(KEEP);
