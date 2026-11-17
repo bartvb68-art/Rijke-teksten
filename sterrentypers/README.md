@@ -38,6 +38,18 @@ Snelheid in aanslagen per minuut voor 3 sterren loopt per les op. Aan het eind v
 groep 6 ± 80, groep 7 ± 100, groep 8 ± 120 (cijferlessen iets lager). Sterren: 1 ster vanaf 85% goed,
 2 sterren vanaf 92% goed en 75% van de doelsnelheid, 3 sterren vanaf 96% goed en de doelsnelheid.
 
+## Snel starten (dubbelklikken)
+
+1. Installeer eenmalig **Node.js** (LTS-versie) via https://nodejs.org.
+2. Dubbelklik in de map `sterrentypers` op:
+   - **Windows:** `Start Sterrentypers (Windows).bat`
+   - **Mac:** `Start Sterrentypers (Mac).command` (de eerste keer: rechtermuisknop → *Open*)
+3. De browser opent vanzelf op http://localhost:3000. Laat het zwarte venster open zolang je speelt.
+
+De eerste keer wordt een demoschool klaargezet (zie de demo-inlog hieronder). In het venster staat ook een adres zoals
+`http://192.168.1.20:3000`: andere computers in hetzelfde (school)netwerk kunnen via dat adres meedoen.
+Voor inloggen van thuis uit moet de app op een server staan (zie *Online zetten*).
+
 ## Installeren
 
 Vereist **Node.js 22.5 of nieuwer**. Er zijn geen npm-pakketten nodig: de server gebruikt alleen ingebouwde modules
