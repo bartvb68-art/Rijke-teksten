@@ -64,7 +64,7 @@ def build_segment(sid, info):
         label = esc_draw(f'{speed}x versneld')
         filters.append(f"drawtext=fontfile={FONT}:text='{label}':x=w-tw-40:y=34:fontsize=34:fontcolor=white:box=1:boxcolor=0x0b1230@0.75:boxborderw=14:enable='between(t,{a:.2f},{b:.2f})'")
     chapter = info.get('chapter')
-    if chapter and sid not in ('s01', 's13'):
+    if chapter and sid not in ('s01', 's14'):
         filters.append(f"drawtext=fontfile={FONT}:text='{esc_draw(chapter)}':x=40:y=h-th-40:fontsize=30:fontcolor=white:box=1:boxcolor=0x2a78d6@0.88:boxborderw=14:enable='lt(t,4.5)'")
     run(['ffmpeg', '-y', '-f', 'concat', '-safe', '0', '-i', str(SEG / f'{sid}.txt'),
          '-i', str(OUT / 'audio' / f'{sid}.wav'),

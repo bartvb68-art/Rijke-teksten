@@ -1,7 +1,7 @@
 import { api, esc, modal, toast, timeAgo, fmtDateTime, fmtDate, minutesLabel, starsHtml } from '../lib.js';
 import { icon } from '../icons.js';
 import { rocketSvg } from '../avatar.js';
-import { go } from '../app.js';
+import { go, session } from '../app.js';
 import { shell } from './shell.js';
 import { lineChart, keyHeatmap, fingerBars, calendar, worstKeys, SERIES } from './charts.js';
 import { alertChip, rememberCards } from './class.js';
@@ -40,6 +40,13 @@ export default async function studentView(root, params) {
   const sid = Number(params.studentId);
   const classId = Number(params.classId);
   let d = await api('GET', `/api/teacher/students/${sid}`);
+  // Klassen waar de leerling naartoe kan: eigen klassen, of voor de beheerder alle klassen.
+  let classOptions = [];
+  try {
+    classOptions = session.teacher?.is_admin
+      ? (await api('GET', '/api/admin/overview')).classes.map((c) => ({ id: c.id, name: `${c.name} (${c.teacher})` }))
+      : (await api('GET', '/api/teacher/classes')).classes.map((c) => ({ id: c.id, name: c.name }));
+  } catch { classOptions = []; }
   let keyRange = 'recent';
 
   function render() {
@@ -107,6 +114,9 @@ export default async function studentView(root, params) {
               <div class="field"><label for="unlock">Lessen vrijgeven tot en met</label>
                 <select id="unlock" name="unlockUpTo"><option value="0">Automatisch (na het halen van de vorige les)</option>${LESSONS.map((l) => `<option value="${l.id}" ${st.settings.unlockUpTo === l.id ? 'selected' : ''}>Les ${l.id}: ${esc(l.title)}</option>`).join('')}</select>
                 <span class="hint">Handig voor leerlingen die al kunnen typen.</span></div>
+              <div class="field"><label for="klas">Klas</label>
+                <select id="klas" name="klas">${(classOptions.some((c) => c.id === d.class.id) ? classOptions : [{ id: d.class.id, name: d.class.name }, ...classOptions]).map((c) => `<option value="${c.id}" ${c.id === d.class.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
+                <span class="hint">Verplaats de leerling naar een andere klas; alle resultaten gaan mee.</span></div>
             </div>
             <div>
               <label class="check"><input type="checkbox" name="showHands" ${st.settings.showHands ? 'checked' : ''}> Handen tonen bij het typen</label>
@@ -143,14 +153,17 @@ export default async function studentView(root, params) {
       e.preventDefault();
       const f = form.elements;
       try {
+        const newClass = Number(f.klas.value);
         d = await api('PATCH', `/api/teacher/students/${sid}`, {
           note: f.note.value,
+          classId: newClass,
           settings: {
             speedFactor: Number(f.tempo.value), unlockUpTo: Number(f.unlockUpTo.value), showHands: f.showHands.checked,
             largeText: f.largeText.checked, dyslexia: f.dyslexia.checked, sound: f.sound.checked,
           },
         });
         toast('Opgeslagen', 'good');
+        if (newClass !== classId) { go(`#/klas/${newClass}/leerling/${sid}`); return; }
         render();
       } catch (err) { toast(err.message, 'error'); }
     });

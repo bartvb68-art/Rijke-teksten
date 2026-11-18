@@ -7,7 +7,7 @@ export default function uitleg(root) {
     <div class="panels">
       <section class="panel two-third">
         <h2>Uitlegvideo</h2>
-        <p class="panel-sub">In vijf minuten zie je hoe Basislab Typen werkt voor leerlingen en leerkrachten (met Nederlandse ondertiteling).</p>
+        <p class="panel-sub">In ruim zes minuten zie je hoe Basislab Typen werkt voor leerlingen, leerkrachten en de beheerder (met Nederlandse ondertiteling).</p>
         <div class="video-box"><video controls preload="metadata" src="/video/uitleg.mp4" poster="/video/poster.jpg">
           Je browser kan deze video niet afspelen.</video></div>
       </section>

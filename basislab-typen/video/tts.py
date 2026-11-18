@@ -1,6 +1,7 @@
 """Maakt de Nederlandse voice-over voor de uitlegvideo met Piper (offline spraaksynthese).
 
-Gebruik: PIPER_MODEL=/pad/naar/nl-rdh-medium.onnx python3 video/tts.py
+Stem: nl_NL-pim-medium (Nederlands-Nederlands, CC0) van huggingface.co/rhasspy/piper-voices.
+Gebruik: PIPER_MODEL=/pad/naar/nl_NL-pim-medium.onnx python3 video/tts.py
 Schrijft per segment een wav-bestand en video/out/timing.json met de begin- en eindtijd van elke zin.
 """
 import json
@@ -14,16 +15,16 @@ from piper import PiperVoice, SynthesisConfig
 HERE = Path(__file__).resolve().parent
 OUT = HERE / 'out' / 'audio'
 OUT.mkdir(parents=True, exist_ok=True)
-MODEL = os.environ.get('PIPER_MODEL', '/tmp/claude-0/tts/nl-rdh-medium/nl-rdh-medium.onnx')
+MODEL = os.environ.get('PIPER_MODEL', '/tmp/claude-0/tts/nl_NL-pim/nl_NL-pim-medium.onnx')
 GAP = 0.32  # stilte tussen zinnen (s)
 LEAD = 0.5  # stilte aan het begin van een segment (s)
 
 # Uitspraakhulp: woorden die de stem anders verkeerd uitspreekt.
 SAY = {
-    'Basislab Typen': 'Sterrentaipers',
     'Raketrace': 'Raketrees',
     'race': 'rees',
     'Excel': 'Eksel',
+    'software': 'softwèr',
 }
 
 
@@ -40,7 +41,7 @@ def sentences(text):
 
 def main():
     voice = PiperVoice.load(MODEL)
-    cfg = SynthesisConfig(length_scale=1.04, noise_scale=0.6, noise_w_scale=0.75)
+    cfg = SynthesisConfig(length_scale=1.06, noise_scale=0.5, noise_w_scale=0.333)
     segments = json.loads((HERE / 'narration.json').read_text(encoding='utf-8'))
     timing = {}
     for seg in segments:

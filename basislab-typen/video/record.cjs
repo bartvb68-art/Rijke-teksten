@@ -162,7 +162,7 @@ async function card(page, title, sub, kind = 'title') {
 
 const SEGMENTS = {
   async s01({ student: page }) {
-    await card(page, 'Basislab <span>Typen</span>', 'Leren typen met tien vingers in een ruimte-avontuur<br>voor groep 6, 7 en 8, met een volgsysteem voor leerkrachten');
+    await card(page, 'Basislab <span>Typen</span>', 'Leren typen met tien vingers in een ruimte-avontuur<br>voor groep 6, 7 en 8 &middot; met volgsysteem en beheer');
   },
 
   async s02({ student: page }, h) {
@@ -291,7 +291,7 @@ const SEGMENTS = {
   },
 
   async s09({ teacher: page }, h) {
-    await card(page, 'Het volgsysteem', 'Voor de leerkracht', 'chapter');
+    await card(page, 'Voor leerkrachten', 'Het volgsysteem', 'chapter');
     await sleep(2600);
     await page.goto(`${BASE}/#/leraar`);
     await page.waitForSelector('input[name=email]');
@@ -304,7 +304,7 @@ const SEGMENTS = {
     await page.waitForSelector('.class-cards');
     await h.move('.class-card:nth-child(1) .chip.warning');
     await sleep(1000);
-    await h.move('.class-card:nth-child(3)');
+    await h.move('.class-card:nth-child(1) .meta');
   },
 
   async s10({ teacher: page }, h) {
@@ -383,8 +383,36 @@ const SEGMENTS = {
     await sleep(1200);
   },
 
-  async s13({ teacher: page }) {
-    await card(page, 'Basislab <span>Typen</span>', 'Op school en thuis &middot; 20 lessen &middot; spellen &middot; volgsysteem<br>Geen advertenties, geen trackers');
+  async s13({ teacher: page }, h) {
+    await h.click('[data-testid=nav-beheer]', { after: 1500 });
+    await page.waitForSelector('[data-daily] svg');
+    await h.move('.tile:nth-child(2)');
+    await sleep(900);
+    await h.move('.tile:nth-child(3)');
+    await sleep(900);
+    await h.move('[data-daily] .hit[data-i="26"]');
+    await sleep(1500);
+    await h.scrollTo('.table-wrap', 1400, 160);
+    await h.move('tr[data-class]:nth-child(2)');
+    await sleep(1500);
+    await h.scroll(-1200, 900);
+    await h.click('[data-tab=leerkrachten]', { after: 1200 });
+    await h.click('[data-add]', { after: 600 });
+    await h.type('Juf Noor de Wit', { apm: 420 });
+    await h.click('input[name=tmail]', { after: 200 });
+    await h.type('noor@basislab.nl', { apm: 420 });
+    await h.click('.modal .btn-primary', { after: 3200 });
+    await h.click('.modal .btn-ghost', { after: 1000 });
+    await h.click('[data-tab=school]', { after: 1300 });
+    await h.move('.logo-preview');
+    await sleep(1800);
+    await h.move('[data-signup]');
+    await sleep(1500);
+    await h.move('input[name=sname]');
+  },
+
+  async s14({ teacher: page }) {
+    await card(page, 'Basislab <span>Typen</span>', 'Op school en thuis &middot; 20 lessen &middot; spellen &middot; volgsysteem &middot; beheer<br>Geen advertenties, geen trackers');
   },
 };
 
