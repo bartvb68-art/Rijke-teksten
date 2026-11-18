@@ -98,6 +98,17 @@ Back-up maken (ook terwijl de app draait): `docker compose exec app npm run back
 - Voor de signalering school/thuis wordt alleen "school" of "thuis" opgeslagen, nooit het IP-adres zelf.
 - Leerkrachten zien alleen hun eigen klassen; leerlingen en klassen kunnen volledig worden verwijderd.
 
+## Bronnen en licenties
+
+| Onderdeel | Herkomst | Licentie |
+|---|---|---|
+| Code, lessen, woordenlijst, zinnen, teksten, iconen en tekeningen | Voor dit project geschreven | Eigen werk (zie `package.json`) |
+| Lettertypen Lexend en Fredoka (`public/fonts/`) | Google Fonts, via Fontsource | SIL Open Font License 1.1 (`public/fonts/OFL-*.txt`) |
+| Stem in de uitlegvideo | Piper-stem *nl-rdh-medium*, getraind op [dutch-vl-tts](https://github.com/r-dh/dutch-vl-tts) | Dataset CC0 1.0; Piper zelf is GPL-3.0 en wordt niet meegeleverd |
+| Kleurenpalet van de grafieken | Algemene kleurwaarden | Niet beschermd |
+
+Er worden geen externe bibliotheken, afbeeldingen of geluidsbestanden meegeleverd. De geluiden worden in de browser opgewekt.
+
 ## Projectstructuur
 
 ```
