@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const BASE = process.env.BASE || 'http://localhost:3100';
-const OUT = path.join(__dirname, 'out');
+const OUT = path.join(__dirname, process.env.VIDEO_OUT || 'out');
 const timing = JSON.parse(fs.readFileSync(path.join(OUT, 'timing.json'), 'utf8'));
 const only = process.argv.slice(2);
 const VIEW = { width: 1440, height: 810 };
@@ -160,7 +160,7 @@ async function card(page, title, sub, kind = 'title') {
   <div><img src="${BASE}/img/icon.svg" alt=""><h1>${title}</h1><p>${sub}</p></div></body></html>`);
 }
 
-const SEGMENTS = {
+const BUILTIN_SEGMENTS = {
   async s01({ student: page }) {
     await card(page, 'Basislab <span>Typen</span>', 'Leren typen met tien vingers in een ruimte-avontuur<br>voor groep 6, 7 en 8 &middot; met volgsysteem en beheer');
   },
@@ -416,6 +416,10 @@ const SEGMENTS = {
   },
 };
 
+const SEGMENTS = process.env.SEGMENTS
+  ? require(path.resolve(process.env.SEGMENTS))({ BASE, sleep, card })
+  : BUILTIN_SEGMENTS;
+
 (async () => {
   const browser = await chromium.launch();
   const mk = async () => {
@@ -434,7 +438,7 @@ const SEGMENTS = {
     const page = usesTeacher ? pages.teacher : pages.student;
     const h = helpers(page);
     const t = timing[id];
-    const targetMs = t.duration * 1000 + 600;
+    const targetMs = t.duration * 1000 + Number(process.env.PAD_MS || 600);
     if (!needsRun) {
       // zorg dat de app in de juiste toestand komt voor latere segmenten (inloggen)
       if (id === 's02') await SEGMENTS.s02(pages, h).catch(() => {});

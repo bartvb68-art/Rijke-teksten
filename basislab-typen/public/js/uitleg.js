@@ -12,6 +12,11 @@ export default function uitleg(root) {
           Je browser kan deze video niet afspelen.</video></div>
       </section>
       <section class="panel third">
+        <h2>Reclamefilmpje voor de klas</h2>
+        <p class="panel-sub">Een vrolijk filmpje van een minuut om leerlingen enthousiast te maken.</p>
+        <div class="video-box"><video controls preload="none" src="/video/reclame.mp4"></video></div>
+      </section>
+      <section class="panel third">
         <h2>Zo begin je</h2>
         <ol class="steps-list">
           <li><span><b>Maak een account</b> als leerkracht.</span></li>

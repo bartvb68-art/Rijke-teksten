@@ -4,11 +4,14 @@ Stappen: python3 video/tts.py  ->  node video/record.cjs  ->  python3 video/buil
 Resultaat: video/out/uitleg.mp4 (1920x1080, H.264 + AAC, ondertitels ingebrand).
 """
 import json
+import os
 import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / 'out'
+OUT = HERE / os.environ.get('VIDEO_OUT', 'out')
+PROMO = os.environ.get('PROMO') == '1'
+MUSIC = os.environ.get('MUSIC')
 SEG = OUT / 'segments'
 SEG.mkdir(parents=True, exist_ok=True)
 FPS = 30
@@ -54,7 +57,7 @@ def build_segment(sid, info):
     (SEG / f'{sid}.txt').write_text('\n'.join(lines))
     video_len = vt(meta['end'])
     audio_len = info['duration']
-    length = max(video_len, audio_len + 0.3)
+    length = max(video_len, audio_len + (0.1 if PROMO else 0.3))
 
     filters = [f'tpad=start_duration={first_gap:.3f}:start_mode=clone:stop_mode=clone:stop_duration={max(0, length - video_len) + 0.5:.3f}',
                f'fps={FPS}', 'scale=1920:1080:flags=lanczos', 'format=yuv420p']
@@ -62,9 +65,10 @@ def build_segment(sid, info):
         a = vt(fast_from) + first_gap
         b = vt(fast_to) + first_gap
         label = esc_draw(f'{speed}x versneld')
-        filters.append(f"drawtext=fontfile={FONT}:text='{label}':x=w-tw-40:y=34:fontsize=34:fontcolor=white:box=1:boxcolor=0x0b1230@0.75:boxborderw=14:enable='between(t,{a:.2f},{b:.2f})'")
+        if not PROMO:
+          filters.append(f"drawtext=fontfile={FONT}:text='{label}':x=w-tw-40:y=34:fontsize=34:fontcolor=white:box=1:boxcolor=0x0b1230@0.75:boxborderw=14:enable='between(t,{a:.2f},{b:.2f})'")
     chapter = info.get('chapter')
-    if chapter and sid not in ('s01', 's14'):
+    if chapter and not PROMO and sid not in ('s01', 's14'):
         filters.append(f"drawtext=fontfile={FONT}:text='{esc_draw(chapter)}':x=40:y=h-th-40:fontsize=30:fontcolor=white:box=1:boxcolor=0x2a78d6@0.88:boxborderw=14:enable='lt(t,4.5)'")
     run(['ffmpeg', '-y', '-f', 'concat', '-safe', '0', '-i', str(SEG / f'{sid}.txt'),
          '-i', str(OUT / 'audio' / f'{sid}.wav'),
@@ -91,7 +95,7 @@ def main():
     for sid, info in timing.items():
         length = build_segment(sid, info)
         print(f'{sid}: {length:.1f}s')
-        for c in info['cues']:
+        for c in ([] if PROMO and sid == list(timing)[-1] else info['cues']):
             a = offset + c['start']
             b = offset + c['end'] + 0.25
             ass_events.append(f"Dialogue: 0,{ts(a, 'ass')},{ts(b, 'ass')},Sub,,0,0,0,,{c['text']}")
@@ -108,20 +112,28 @@ WrapStyle: 0
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Sub,Inter,44,&H00FFFFFF,&H00FFFFFF,&H00000000,&H50101010,0,0,0,0,100,100,0,0,3,14,0,2,220,220,46,1
+Style: Sub,Inter,{56 if PROMO else 44},&H00FFFFFF,&H00FFFFFF,&H00000000,{'&H20301B0B' if PROMO else '&H50101010'},{-1 if PROMO else 0},0,0,0,100,100,0,0,3,{18 if PROMO else 14},0,2,220,220,{60 if PROMO else 46},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """ + '\n'.join(ass_events) + '\n'
     (OUT / 'subs.ass').write_text(ass, encoding='utf-8')
     run(['ffmpeg', '-y', '-f', 'concat', '-safe', '0', '-i', str(OUT / 'concat.txt'), '-c', 'copy', str(OUT / 'joined.mp4')])
-    run(['ffmpeg', '-y', '-i', str(OUT / 'joined.mp4'),
-         '-vf', f"ass={(OUT / 'subs.ass').as_posix()},fade=t=in:st=0:d=0.6,fade=t=out:st={offset - 1:.2f}:d=1",
-         '-af', f'loudnorm=I=-16:TP=-1.5:LRA=11,afade=t=out:st={offset - 1:.2f}:d=1',
-         '-c:v', 'libx264', '-preset', 'slow', '-crf', '22', '-pix_fmt', 'yuv420p', '-movflags', '+faststart',
-         '-c:a', 'aac', '-b:a', '160k', str(OUT / 'uitleg.mp4')])
-    run(['ffmpeg', '-y', '-ss', '1.5', '-i', str(SEG / 's01.mp4'), '-frames:v', '1', '-q:v', '3', '-vf', 'scale=1280:-2', str(OUT / 'poster.jpg')])
-    print(f'Klaar: {OUT / "uitleg.mp4"} ({offset:.0f} s)')
+    vf = f"ass={(OUT / 'subs.ass').as_posix()},fade=t=in:st=0:d=0.6,fade=t=out:st={offset - 1:.2f}:d=1"
+    cmd = ['ffmpeg', '-y', '-i', str(OUT / 'joined.mp4')]
+    if MUSIC:
+        cmd += ['-i', MUSIC, '-filter_complex',
+                f"[0:v]{vf}[vv];[0:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,asplit=2[v1][v2];"
+                f"[1:a]aresample=48000,atrim=0:{offset:.2f},volume=0.16,afade=t=in:st=0:d=1,afade=t=out:st={offset - 2:.2f}:d=2[m];"
+                f"[m][v1]sidechaincompress=threshold=0.04:ratio=6:attack=20:release=400[md];[v2][md]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.95[a]",
+                '-map', '[vv]', '-map', '[a]']
+    else:
+        cmd += ['-vf', vf, '-af', f'loudnorm=I=-16:TP=-1.5:LRA=11,afade=t=out:st={offset - 1:.2f}:d=1']
+    cmd += ['-c:v', 'libx264', '-preset', 'slow', '-crf', '22', '-pix_fmt', 'yuv420p', '-movflags', '+faststart',
+            '-c:a', 'aac', '-b:a', '160k', str(OUT / os.environ.get('OUT_NAME', 'uitleg.mp4'))]
+    run(cmd)
+    run(['ffmpeg', '-y', '-ss', '1.5', '-i', str(SEG / f"{next(iter(timing))}.mp4"), '-frames:v', '1', '-q:v', '3', '-vf', 'scale=1280:-2', str(OUT / 'poster.jpg')])
+    print(f'Klaar: {OUT / os.environ.get("OUT_NAME", "uitleg.mp4")} ({offset:.0f} s)')
 
 
 if __name__ == '__main__':

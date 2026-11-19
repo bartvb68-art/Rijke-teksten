@@ -13,16 +13,18 @@ from pathlib import Path
 from piper import PiperVoice, SynthesisConfig
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / 'out' / 'audio'
+OUTROOT = HERE / os.environ.get('VIDEO_OUT', 'out')
+OUT = OUTROOT / 'audio'
 OUT.mkdir(parents=True, exist_ok=True)
 MODEL = os.environ.get('PIPER_MODEL', '/tmp/claude-0/tts/nl_NL-pim/nl_NL-pim-medium.onnx')
-GAP = 0.32  # stilte tussen zinnen (s)
-LEAD = 0.5  # stilte aan het begin van een segment (s)
+GAP = float(os.environ.get('GAP', '0.32'))  # stilte tussen zinnen (s)
+LEAD = float(os.environ.get('LEAD', '0.5'))  # stilte aan het begin van een segment (s)
 
 # Uitspraakhulp: woorden die de stem anders verkeerd uitspreekt.
 SAY = {
     'Raketrace': 'Raketrees',
     'race': 'rees',
+    'Race': 'Rees',
     'Excel': 'Eksel',
     'software': 'softwèr',
 }
@@ -41,8 +43,8 @@ def sentences(text):
 
 def main():
     voice = PiperVoice.load(MODEL)
-    cfg = SynthesisConfig(length_scale=1.06, noise_scale=0.5, noise_w_scale=0.333)
-    segments = json.loads((HERE / 'narration.json').read_text(encoding='utf-8'))
+    cfg = SynthesisConfig(length_scale=float(os.environ.get('LENGTH_SCALE', '1.06')), noise_scale=float(os.environ.get('NOISE_SCALE', '0.5')), noise_w_scale=0.333)
+    segments = json.loads((HERE / os.environ.get('NARRATION', 'narration.json')).read_text(encoding='utf-8'))
     timing = {}
     for seg in segments:
         frames = []
@@ -68,11 +70,11 @@ def main():
             w.writeframes(silence(LEAD))
             for i, f in enumerate(frames):
                 w.writeframes(f)
-                w.writeframes(silence(GAP if i < len(frames) - 1 else 0.6))
-        timing[seg['id']] = {'duration': round(t - GAP + 0.6, 3), 'cues': cues, 'speed': seg.get('speed', 1), 'chapter': seg.get('chapter', '')}
+                w.writeframes(silence(GAP if i < len(frames) - 1 else float(os.environ.get('TAIL', '0.6'))))
+        timing[seg['id']] = {'duration': round(t - GAP + float(os.environ.get('TAIL', '0.6')), 3), 'cues': cues, 'speed': seg.get('speed', 1), 'chapter': seg.get('chapter', '')}
         print(f"{seg['id']}: {timing[seg['id']]['duration']:.1f}s")
     (OUT / '_tmp.wav').unlink(missing_ok=True)
-    (HERE / 'out' / 'timing.json').write_text(json.dumps(timing, indent=1, ensure_ascii=False), encoding='utf-8')
+    (OUTROOT / 'timing.json').write_text(json.dumps(timing, indent=1, ensure_ascii=False), encoding='utf-8')
 
 
 if __name__ == '__main__':
