@@ -119,7 +119,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """ + '\n'.join(ass_events) + '\n'
     (OUT / 'subs.ass').write_text(ass, encoding='utf-8')
     run(['ffmpeg', '-y', '-f', 'concat', '-safe', '0', '-i', str(OUT / 'concat.txt'), '-c', 'copy', str(OUT / 'joined.mp4')])
-    vf = f"ass={(OUT / 'subs.ass').as_posix()},fade=t=in:st=0:d=0.6,fade=t=out:st={offset - 1:.2f}:d=1"
+    fades = f"fade=t=in:st=0:d=0.6,fade=t=out:st={offset - 1:.2f}:d=1"
+    vf = fades if os.environ.get('NOSUBS') == '1' else f"ass={(OUT / 'subs.ass').as_posix()},{fades}"
     cmd = ['ffmpeg', '-y', '-i', str(OUT / 'joined.mp4')]
     if MUSIC:
         cmd += ['-i', MUSIC, '-filter_complex',

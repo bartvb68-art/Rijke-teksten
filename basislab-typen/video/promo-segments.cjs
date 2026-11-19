@@ -58,9 +58,9 @@ module.exports = ({ BASE, sleep }) => {
       await sleep(600);
       await h.move('.planet:nth-child(1) .lesson-node:nth-child(3)', { steps: 14 });
       await h.move('.lesson-node.current', { steps: 14 });
-      await h.scroll(700, 2200);
-      await h.move('.planet:nth-child(4) .planet-orb', { steps: 14 });
-      await h.scroll(700, 1800);
+      await h.scroll(900, 1500);
+      await h.move('.planet:nth-child(4) .planet-orb', { steps: 10 });
+      await h.scroll(700, 1100);
       await h.move('.planet:nth-child(6) .planet-orb', { steps: 14 });
     },
 
@@ -70,7 +70,7 @@ module.exports = ({ BASE, sleep }) => {
       await sleep(1300);
       await page.keyboard.press(' ');
       await sleep(300);
-      await typeFor(page, 5600, 130, 7);
+      await typeFor(page, 7600, 130, 7);
     },
 
     async p04({ student: page }, h) {
@@ -92,7 +92,7 @@ module.exports = ({ BASE, sleep }) => {
       await page.goto(`${BASE}/#/spel/meteoren`);
       await page.waitForSelector('[data-go]');
       await page.click('[data-go]');
-      const end = Date.now() + 7600;
+      const end = Date.now() + 5200;
       await sleep(900);
       while (Date.now() < end) {
         const next = await page.evaluate(() => {

@@ -22,7 +22,7 @@
  },
  {
   "id": "p06",
-  "speed": 20,
+  "speed": 30,
   "text": "Race tegen andere raketten. Wie is het snelst?"
  },
  {
@@ -31,10 +31,10 @@
  },
  {
   "id": "p08",
-  "text": "Verzamel badges, en haal je eigen typediploma!"
+  "text": "Verdien prijzen, en haal je eigen typediploma!"
  },
  {
   "id": "p09",
-  "text": "Basislab Typen. Vraag je juf of meester om je inlogkaart, en ga van start!"
+  "text": "Vraag je juf of meester om je inlogkaart, en ga van start met Basislab Typen!"
  }
 ]
