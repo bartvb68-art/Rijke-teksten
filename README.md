@@ -1,3 +1,7 @@
+# Basislab Ontleden (zinsontleding groep 5–8)
+
+In de map [`basislab-ontleden/`](basislab-ontleden/) staat **Basislab Ontleden**: zinsontleding in een muziekgame voor groep 5 tot en met 8, met een volgsysteem voor leerkrachten, in dezelfde stijl als Basislab Typen. Zie [`basislab-ontleden/README.md`](basislab-ontleden/README.md).
+
 <div align="center">
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>

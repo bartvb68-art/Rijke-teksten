@@ -1,0 +1,32 @@
+# Basislab Ontleden op de VPS, naast Basislab Typen (zoals Basislab Lezen).
+# De Caddy-container van Basislab Typen regelt het webadres en het slotje (https)
+# en stuurt ontleden.basislab.nl door naar deze container.
+# Starten: docker compose -f naast-typen.yml up -d --build
+name: basislab-ontleden
+
+services:
+  ontleden:
+    build: ..
+    restart: unless-stopped
+    environment:
+      COOKIE_SECURE: "1"
+      TRUST_PROXY: "1"
+      SIGNUP_CODE: ${SIGNUP_CODE:?Vul SIGNUP_CODE in in het bestand .env}
+      TZ_SCHOOL: ${TZ_SCHOOL:-Europe/Amsterdam}
+    volumes:
+      - data:/app/data
+    networks:
+      - typen
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  data:
+
+networks:
+  typen:
+    external: true
+    name: ${TYPEN_NETWERK:-deploy_default}

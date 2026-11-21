@@ -1,0 +1,18 @@
+{
+  "name": "basislab-ontleden",
+  "version": "1.0.0",
+  "description": "Zinsontleding in een muziekgame voor groep 5 tot en met 8, met volgsysteem voor leerkrachten.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "start": "node --no-warnings=ExperimentalWarning server.js",
+    "dev": "node --no-warnings=ExperimentalWarning --watch server.js",
+    "test": "node --no-warnings=ExperimentalWarning --test test/*.test.js",
+    "demo": "node --no-warnings=ExperimentalWarning scripts/seed-demo.js",
+    "backup": "node --no-warnings=ExperimentalWarning scripts/backup.js"
+  },
+  "license": "UNLICENSED"
+}
