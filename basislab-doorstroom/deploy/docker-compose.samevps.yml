@@ -1,10 +1,11 @@
 # Basislab Doorstroom op dezelfde VPS als Basislab Typen.
 # De Caddy van Basislab Typen regelt HTTPS; deze app hangt aan het netwerk van die opstelling.
+# De service heet bewust "doorstroom" en niet "app": anders botst de naam met de app van Typen op hetzelfde netwerk.
 # Gebruik: docker compose -f docker-compose.samevps.yml up -d --build   (zie README voor de regel in de Caddyfile van Typen)
 name: basislab-doorstroom
 
 services:
-  app:
+  doorstroom:
     build: ..
     restart: unless-stopped
     environment:
