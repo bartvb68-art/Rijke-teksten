@@ -1,0 +1,18 @@
+{
+  "name": "basislab-doorstroom",
+  "version": "1.0.0",
+  "description": "Adaptieve voorbereiding op de doorstroomtoets (IEP) voor groep 8: rekenen, taalverzorging en lezen, met weekplanning en volgsysteem.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "start": "node --no-warnings=ExperimentalWarning server.js",
+    "dev": "node --no-warnings=ExperimentalWarning --watch server.js",
+    "test": "node --no-warnings=ExperimentalWarning --test test/*.test.js",
+    "demo": "node --no-warnings=ExperimentalWarning scripts/seed-demo.js",
+    "backup": "node --no-warnings=ExperimentalWarning scripts/backup.js"
+  },
+  "license": "UNLICENSED"
+}
