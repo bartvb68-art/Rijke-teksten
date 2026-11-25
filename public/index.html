@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Basislab Teksten</title>
+<meta name="description" content="Rijke teksten met vragen en opdrachten voor de klas, alleen op basis van erkende kinderbronnen.">
+<meta name="theme-color" content="#141414">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<header class="topbar">
+  <a href="./" class="logo" aria-label="Basislab Teksten – start">
+    <span class="logo-mark">B</span><span class="logo-text">Basislab <b>Teksten</b></span>
+  </a>
+  <nav class="mainnav" aria-label="Hoofdmenu">
+    <a href="#maken" class="active">Nieuwe tekst</a>
+    <button type="button" class="linklike" id="open-bronnen">Over de bronnen</button>
+  </nav>
+  <span class="trust" title="De AI zoekt en leest alleen op de erkende bronnen die je aanvinkt.">✓ Alleen erkende bronnen</span>
+</header>
+
+<div class="testbanner" id="testbanner" hidden>Testmodus: er wordt voorbeeldinhoud getoond, er wordt niets opgezocht.</div>
+
+<main id="app">
+  <section class="hero">
+    <div class="hero-text">
+      <span class="kicker">Voor leerkrachten</span>
+      <h1>Rijke teksten voor jouw klas</h1>
+      <p>Kies een thema en een groep. Basislab Teksten zoekt informatie op bij <strong>Jeugdjournaal, Het Klokhuis, Kidsweek</strong> en andere erkende kinderbronnen, en maakt daar een rijke tekst van, met woordenlijst, vragen, meerkeuzevragen en differentiatie.</p>
+    </div>
+  </section>
+
+  <form class="card maak" id="maken" autocomplete="off">
+    <div class="field-big">
+      <label for="thema">Waar gaat de tekst over?</label>
+      <div class="big-input">
+        <input id="thema" name="thema" type="text" maxlength="150" required placeholder="Bijv. bijen, vulkanen, Prinsjesdag, de Tweede Wereldoorlog…">
+      </div>
+      <div class="chips suggesties" id="suggesties" aria-label="Voorbeeldthema's"></div>
+    </div>
+
+    <fieldset class="field">
+      <legend>Groep</legend>
+      <div class="segmented" id="groepen"></div>
+    </fieldset>
+
+    <div class="grid2">
+      <label class="field">Tekstsoort
+        <select id="tekstsoort" name="tekstsoort"></select>
+      </label>
+      <label class="field">Lengte
+        <select id="lengte" name="lengte"></select>
+      </label>
+    </div>
+
+    <fieldset class="field">
+      <legend>Bronnen <span class="muted">– de AI zoekt alleen hier</span></legend>
+      <div class="chips bronchips" id="bronnen"></div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-accent btn-big" id="knop-maak">✨ Maak lesmateriaal</button>
+      <p class="muted klein">Dit duurt meestal 1 à 2 minuten.</p>
+    </div>
+    <p class="fout" id="fout" role="alert" hidden></p>
+  </form>
+
+  <section class="card voortgang" id="voortgang" hidden aria-live="polite">
+    <div class="voortgang-kop"><div class="spinner" aria-hidden="true"></div><h2 id="voortgang-titel">Bezig…</h2></div>
+    <ol class="log" id="log"></ol>
+  </section>
+
+  <section id="resultaat" hidden></section>
+</main>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <article class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-titel">
+    <button class="modal-close" data-close aria-label="Sluiten">✕</button>
+    <div id="modal-body"></div>
+  </article>
+</div>
+
+<footer class="footer">
+  <p>Basislab Teksten · teksten op basis van erkende kinderbronnen. Controleer de tekst altijd voordat je hem in de klas gebruikt.</p>
+</footer>
+
+<script src="assets/app.js" type="module"></script>
+</body>
+</html>

@@ -1,7 +1,0 @@
-{
-  "name": "MeesterTekst - Didactische Tekstgenerator",
-  "description": "Een krachtige tool voor leerkrachten in het primair onderwijs om rijke, niveau-adequate teksten te genereren met bijbehorende audio, vragen en differentiatie.",
-  "requestFramePermissions": [
-    "microphone"
-  ]
-}
