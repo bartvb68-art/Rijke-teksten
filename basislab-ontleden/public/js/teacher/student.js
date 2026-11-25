@@ -137,6 +137,7 @@ export default async function studentView(root, params) {
               <label class="check"><input type="checkbox" name="largeText" ${st.settings.largeText ? 'checked' : ''}> Grotere letters</label>
               <label class="check"><input type="checkbox" name="dyslexia" ${st.settings.dyslexia ? 'checked' : ''}> Extra letterafstand (dyslexie)</label>
               <label class="check"><input type="checkbox" name="sound" ${st.settings.sound ? 'checked' : ''}> Geluid</label>
+              <label class="check"><input type="checkbox" name="music" ${st.settings.music !== false ? 'checked' : ''}> Achtergrondmuziek (de band speelt mee)</label>
             </div>
             <div class="field"><label for="note">Aantekeningen (alleen zichtbaar voor jou)</label><textarea id="note" name="note" class="note-box">${esc(st.note)}</textarea></div>
             <div class="row" style="grid-column:1/-1"><button class="btn btn-primary" type="submit">Opslaan</button><span class="spacer"></span><button class="btn btn-danger" type="button" data-delete>${icon('trash')} Leerling verwijderen</button></div>
@@ -172,7 +173,7 @@ export default async function studentView(root, params) {
           classId: newClass,
           settings: {
             levelShift: Number(f.levelShift.value), unlockUpTo: Number(f.unlockUpTo.value), readAloud: f.readAloud.checked,
-            largeText: f.largeText.checked, dyslexia: f.dyslexia.checked, sound: f.sound.checked,
+            largeText: f.largeText.checked, dyslexia: f.dyslexia.checked, sound: f.sound.checked, music: f.music.checked,
           },
         });
         toast('Opgeslagen', 'good');

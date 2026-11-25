@@ -35,7 +35,7 @@ export function sentenceHtml(item, state = {}, { result = null, interactive = tr
     const cuts = state.cuts || new Set();
     let html = '';
     words.forEach((w, i) => {
-      html += `<span class="w">${esc(w.w)}</span>`;
+      html += `<span class="w" style="--i:${i}">${esc(w.w)}</span>`;
       if (i < words.length - 1) {
         let cls = cuts.has(i) ? 'cut' : '';
         if (result) {
@@ -74,7 +74,7 @@ export function sentenceHtml(item, state = {}, { result = null, interactive = tr
       cls.push('static');
     }
     const tag = item.mode === 'quiz' || !interactive || result ? 'span' : 'button';
-    return `<${tag} ${tag === 'button' ? 'type="button"' : ''} class="${cls.join(' ')}" data-chunk="${idx}">${esc(c.text)}${extra}</${tag}>`;
+    return `<${tag} ${tag === 'button' ? 'type="button"' : ''} class="${cls.join(' ')}" data-chunk="${idx}" style="--i:${idx}">${esc(c.text)}${extra}</${tag}>`;
   });
   return `<div class="zin">${chunks.join('')}<span class="end">${esc(s.end)}</span></div>`;
 }

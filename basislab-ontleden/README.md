@@ -17,6 +17,8 @@ Webbased oefenomgeving voor **zinsontleding** (redekundig ontleden) in een muzie
 - 133 zinnen met muziekthema, zelf geschreven en per zinsdeel gemarkeerd (met de vorm in een andere tijd voor de tijdproef). Zinnen worden steeds anders gekozen en passen bij de groep.
 - Spellen met de zinsdelen die de leerling al kent: **Notenregen** (ritmespel: zinsdelen vallen als noten, kies het etiket voor de lijn) en **Bandbattle** (race tegen drie bands die zich aanpassen aan het eigen tempo).
 - Beloningen: XP en rangen (van Straatmuzikant tot Legende), muzieknoten, eigen gitaar versieren in de studio, 18 badges, hitlijst van de week, dagreeks, weekdoel.
+- **Je band speelt mee**: een live in de browser opgewekte band (drums, bas, keys, gitaarsolo). Elk goed antwoord op rij laat er een instrument bij komen; zinsdelen aanklikken speelt noten uit de toonladder, een goed antwoord een gitaarakkoord, een optreden eindigt met drumroffel, bekken en applaus. Muziek is uit te zetten (knop in de bovenbalk, in de studio of door de leerkracht).
+- Beweging: zinsdelen die het podium op komen en meedansen bij een goed antwoord, nootjesregen, equalizer en onderdelen die in de maat meeveren (uit bij "minder beweging" op de computer).
 - Toegankelijk: zinnen **voorlezen** (spraak van de browser zelf), grotere letters, extra letterafstand (dyslexie), geluid uit, volledig met het toetsenbord te bedienen.
 
 ## Voor leerkrachten (volgsysteem)

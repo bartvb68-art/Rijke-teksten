@@ -62,6 +62,7 @@ export const DEFAULT_STUDENT_SETTINGS = {
   dyslexia: false,
   largeText: false,
   sound: true,
+  music: true,
   readAloud: true,
 };
 

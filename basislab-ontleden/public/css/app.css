@@ -163,7 +163,7 @@ img, svg { max-width: 100%; }
 .hud { display: flex; align-items: center; gap: 10px; padding: 10px 20px; flex-wrap: wrap; position: sticky; top: 0; z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); margin-bottom: 16px; }
 .hud .icon-only span { display: none; }
 @media (max-width: 1500px) { .hud .xp-bar { display: none; } }
-@media (max-width: 1250px) { .hud .brand-text { display: none; } }
+@media (max-width: 1440px) { .hud .brand-text { display: none; } }
 .hud .school-logo { max-width: 140px; }
 .hud .brand { font-size: 1.15rem; }
 .hud-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: var(--radius-md); background: var(--surface-soft); border: 1.5px solid transparent; font-weight: 600; text-decoration: none; color: var(--ink); }
@@ -535,4 +535,71 @@ table.table { width: 100%; border-collapse: collapse; font-size: .92rem; }
   .diploma h1 { font-size: 2rem; }
   .diploma .who { font-size: 1.7rem; }
 }
+
+/* ===== Muziek en beweging ===== */
+/* zwevende nootjes op de achtergrond (leerlingpagina's) */
+.notes-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; display: none; }
+body[data-theme="stage"] .notes-bg { display: block; }
+.notes-bg i { position: absolute; bottom: -60px; font-style: normal; font-weight: 700; color: var(--ontleden-mid); opacity: .45; animation: drift 24s linear infinite; }
+.notes-bg i:nth-child(2n) { color: #f6b8a5; animation-duration: 31s; }
+.notes-bg i:nth-child(3n) { animation-duration: 19s; }
+@keyframes drift { from { transform: translateY(0) rotate(-10deg); } 50% { transform: translateY(-55vh) translateX(30px) rotate(10deg); } to { transform: translateY(-115vh) rotate(-6deg); } }
+
+/* nootjesregen bij een goed antwoord */
+.fx-note { position: fixed; z-index: 120; pointer-events: none; font-weight: 700; transform: translate(-50%, -50%); animation: fly 1.1s cubic-bezier(.2,.7,.3,1) forwards; }
+@keyframes fly { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.4); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--rot)) scale(1.1); } }
+
+/* zinsdelen komen één voor één het podium op, en dansen mee bij een goed antwoord */
+.zin.enter .chunk, .zin.enter .w { animation: chunkIn .45s cubic-bezier(.3,1.4,.5,1) backwards; animation-delay: calc(var(--i, 0) * 70ms); }
+@keyframes chunkIn { from { opacity: 0; transform: translateY(18px) scale(.9); } }
+.zin.party .chunk, .zin.party .w { animation: hop .55s ease-in-out; animation-delay: calc(var(--i, 0) * 85ms); }
+@keyframes hop { 30% { transform: translateY(-14px) rotate(-2deg); } 60% { transform: translateY(2px); } }
+.feedback { animation: slideUp .3s ease-out; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } }
+.result-stats .stat { animation: chunkIn .5s backwards; }
+.result-stats .stat:nth-child(2) { animation-delay: .1s; }
+.result-stats .stat:nth-child(3) { animation-delay: .2s; }
+
+/* equalizer in de knop "Muziek" */
+.eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 16px; }
+.eq i { width: 3px; height: 30%; border-radius: 2px; background: currentColor; transform-origin: bottom; transition: height .12s; }
+.music-toggle { cursor: pointer; color: var(--muted); }
+.music-toggle.on { background: var(--ontleden-tint); color: var(--ontleden); border-color: var(--ontleden-mid); }
+body.band-on .music-toggle.on .eq i { animation: eqbar .6s ease-in-out infinite alternate; }
+body.band-on .music-toggle.on .eq i:nth-child(2) { animation-duration: .45s; }
+body.band-on .music-toggle.on .eq i:nth-child(3) { animation-duration: .3s; }
+body.band-on .music-toggle.on .eq i:nth-child(4) { animation-duration: .52s; }
+body.band-on .music-toggle.on .eq i:nth-child(5) { animation-duration: .38s; }
+@keyframes eqbar { from { height: 20%; } to { height: 100%; } }
+
+/* de bandstrook in de les */
+.band-strip { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; padding: 8px 12px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line); }
+.band-label { display: inline-flex; gap: 6px; align-items: center; font-weight: 700; margin-right: 4px; }
+.band-label .icon { color: var(--accent); }
+.band-slot { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: var(--radius-md); background: var(--surface-soft); color: #a3a8b5; font-weight: 600; font-size: .85rem; transition: background .25s, color .25s, transform .12s; }
+.band-slot small { font-size: .85rem; }
+.band-slot.on { background: var(--ontleden); color: #fff; }
+.band-slot.on[data-slot="4"] { background: var(--accent); }
+@media (max-width: 1500px) { .music-toggle > span:not(.eq) { display: none; } }
+@media (max-width: 1400px) { .hud-pill[title="XP"], .hud .hud-pill > span:not(.eq):not([data-coins]) { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+body.beat .band-slot.on { transform: translateY(-3px) scale(1.05); }
+.band-tip { font-size: .85rem; margin-left: auto; }
+
+/* in de maat meeveren */
+.hud .brand img, .lesson-node.current, .planet:not(.locked) .podium-orb, .continue-card .btn-primary { transition: transform .12s ease-out; }
+body.beat .hud .brand img { transform: scale(1.12) rotate(-4deg); }
+body.beat .lesson-node.current { transform: scale(1.05); }
+body.beat[data-beat="0"] .planet:not(.locked) .podium-orb { transform: scale(1.05); }
+body.beat .continue-card .btn-primary { transform: scale(1.03); }
+.lesson-node:not(.locked):hover { animation: wiggle .4s; }
+@keyframes wiggle { 30% { transform: translateY(-3px) rotate(-3deg); } 60% { transform: translateY(-3px) rotate(3deg); } }
+.hero-art .program-logo { animation: float 5s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-12px) rotate(1.5deg); } }
+.landing-hero h1 .prog { display: inline-block; animation: chunkIn .7s .2s cubic-bezier(.3,1.4,.5,1) backwards; }
+.choice:hover .icon { animation: wiggle .4s; }
+.game-card:hover .gi { animation: wiggle .4s; }
+body.beat .rain-line { box-shadow: 0 0 22px rgba(235,95,54,.9); }
+.rain-line { transition: box-shadow .12s; }
+body.beat .lane.me { box-shadow: 0 0 0 2px rgba(235,95,54,.35); }
+
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

@@ -1,5 +1,7 @@
 // SVG-iconen (geen emoji, zodat alles er op elke computer hetzelfde uitziet).
 const P = {
+  drum: '<ellipse cx="12" cy="9" rx="8" ry="3"/><path d="M4 9v7c0 1.7 3.6 3 8 3s8-1.3 8-3V9"/><path d="M8 11.7v7M16 11.7v7M5 3l5 4.5M19 3l-5 4.5"/>',
+  piano: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 5v14M12 5v14M16 5v14"/><path d="M7 5v8h2V5M15 5v8h2V5" fill="currentColor"/>',
   note: '<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
   stage: '<path d="M3 20h18M5 20v-5h14v5"/><path d="M7 15L4 4M17 15l3-11"/><path d="M9 9h6"/>',
   guitar: '<path d="M14 10l6-6M18 2l4 4"/><path d="M14 10a4 4 0 00-5.5-.5c-1 .8-1.2 2-2.5 2.5-2 .7-3.5 2-3.5 4.5A5.5 5.5 0 008 21c2.5 0 3.8-1.5 4.5-3.5.5-1.3 1.7-1.5 2.5-2.5A4 4 0 0014 10z"/><circle cx="9" cy="15" r="1.5"/>',

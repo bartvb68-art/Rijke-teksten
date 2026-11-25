@@ -3,7 +3,8 @@ import { icon } from '../icons.js';
 import { session, setStudentState, go } from '../app.js';
 import { LABELS, gameLabels, gameSentences, makeRng } from '../shared/curriculum.js';
 import { BADGE_BY_ID } from '../shared/rewards.js';
-import { sfx } from '../sound.js';
+import * as band from '../band.js';
+import { burst } from '../fx.js';
 import { hudHtml, bindHud } from './hud.js';
 import { mergeStats, mergeCounts } from '../ontleed-ui.js';
 
@@ -69,6 +70,7 @@ export default async function notenregen(root) {
       stats: {}, confusions: {}, started: Date.now(), s: null, idx: 0, note: null, y: 0, last: 0, locked: false,
     };
     running = true;
+    band.setLevel(3);
     nextSentence();
     g.last = performance.now();
     raf = requestAnimationFrame(tick);
@@ -83,6 +85,7 @@ export default async function notenregen(root) {
     g.idx = 0;
     g.sentences += 1;
     g.level = 1 + Math.floor((g.sentences - 1) / 2);
+    if (g.level >= 3) band.setLevel(4);
     g.answers = g.s.chunks.map(() => null);
     spawn();
   }
@@ -152,12 +155,14 @@ export default async function notenregen(root) {
       const mult = 1 + Math.min(2, Math.floor(g.combo / 5));
       const pts = 100 * mult + Math.round(Math.max(0, 1 - g.y / rain.clientHeight) * 50);
       g.score += pts;
-      sfx.note(g.combo);
+      band.note(g.combo + 1);
+      if (g.combo % 5 === 0) { band.strum(); burst(g.note, 12); }
       pop(`+${pts}${mult > 1 ? ` ×${mult}` : ''}`, '#7be0a0');
     } else {
       g.combo = 0;
       g.lives -= 1;
-      sfx.miss();
+      band.bonk();
+      band.setLevel(3);
       pop(label ? `Dat was ${LABELS[exp].short}` : `Te laat! ${LABELS[exp].short}`, '#ff8f8f');
       rain.animate?.([{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'none' }], { duration: 220 });
     }
@@ -169,7 +174,7 @@ export default async function notenregen(root) {
     setTimeout(() => {
       if (!running) return;
       g.idx += 1;
-      if (g.idx >= g.s.chunks.length) { sfx.drum(); setTimeout(() => running && nextSentence(), 450); } else spawn();
+      if (g.idx >= g.s.chunks.length) { band.riff(2); setTimeout(() => running && nextSentence(), 450); } else spawn();
     }, ok ? 220 : 700);
   }
 
@@ -183,6 +188,8 @@ export default async function notenregen(root) {
   async function gameOver() {
     running = false;
     cancelAnimationFrame(raf);
+    band.setLevel(2);
+    band.crash();
     let saved = null;
     if (g.items >= 1) {
       try {

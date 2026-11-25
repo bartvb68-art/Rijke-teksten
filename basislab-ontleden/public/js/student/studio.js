@@ -1,7 +1,7 @@
 import { api, esc, toast } from '../lib.js';
 import { icon } from '../icons.js';
 import { guitarSvg } from '../avatar.js';
-import { session, setStudentState, applyStudentPrefs } from '../app.js';
+import { session, setStudentState, applyStudentPrefs, syncBand } from '../app.js';
 import { SHOP } from '../shared/rewards.js';
 import { sfx } from '../sound.js';
 import { hudHtml, bindHud } from './hud.js';
@@ -47,6 +47,7 @@ export default async function studio(root) {
             <label class="check"><input type="checkbox" data-set="largeText" ${s.settings.largeText ? 'checked' : ''}> Grotere letters</label>
             <label class="check"><input type="checkbox" data-set="dyslexia" ${s.settings.dyslexia ? 'checked' : ''}> Extra ruimte tussen letters (prettig bij dyslexie)</label>
             <label class="check"><input type="checkbox" data-set="sound" ${s.settings.sound ? 'checked' : ''}> Geluid</label>
+            <label class="check"><input type="checkbox" data-set="music" ${s.settings.music !== false ? 'checked' : ''}> Muziek: je band speelt mee tijdens het oefenen</label>
           </div>
         </div>
       </div>
@@ -57,6 +58,7 @@ export default async function studio(root) {
       try {
         setStudentState(await api('POST', '/api/student/settings', { [c.dataset.set]: c.checked }));
         applyStudentPrefs();
+        syncBand();
         toast('Opgeslagen', 'good');
       } catch (err) { toast(err.message, 'error'); }
     }));

@@ -480,7 +480,7 @@ export function createApp({ db, now = () => Date.now(), signupCode = process.env
 
   function cleanStudentSettings(input, current, { teacher }) {
     const s = { ...current };
-    for (const k of ['dyslexia', 'largeText', 'sound', 'readAloud']) if (input[k] != null) s[k] = !!input[k];
+    for (const k of ['dyslexia', 'largeText', 'sound', 'music', 'readAloud']) if (input[k] != null) s[k] = !!input[k];
     if (teacher) {
       if (input.levelShift != null) s.levelShift = int(input.levelShift, { min: -1, max: 1, name: 'niveau' });
       if (input.unlockUpTo != null) s.unlockUpTo = int(input.unlockUpTo, { min: 0, max: LESSONS.length, name: 'vrijgeven' });

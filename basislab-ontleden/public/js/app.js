@@ -1,5 +1,7 @@
 import { api, toast } from './lib.js';
-import { setSoundEnabled, stopSpeaking } from './sound.js';
+import { setSoundEnabled, stopSpeaking, audio } from './sound.js';
+import * as band from './band.js';
+import './fx.js';
 
 // Gedeelde sessiestatus
 export const session = { role: null, state: null, teacher: null, school: { name: '', logo: null, allowSignup: true } };
@@ -76,6 +78,18 @@ const ROUTES = [
   { re: /^\/diploma\/(\d+)$/, keys: ['studentId'], load: () => import('./diploma.js'), theme: 'print', role: 'teacher' },
 ];
 
+/** De band speelt op de leerlingpagina's, als muziek en geluid aan staan. */
+export function syncBand(studentPage = document.body.dataset.theme === 'stage' && session.role === 'student') {
+  const s = session.state?.student.settings || {};
+  if (studentPage && s.music !== false && s.sound !== false) {
+    band.setLevel(2);
+    band.start();
+  } else band.stop();
+}
+
+// Browsers starten geluid pas na een klik of toets: dan meteen de muziek laten beginnen.
+for (const ev of ['pointerdown', 'keydown']) window.addEventListener(ev, () => { if (session.role === 'student') audio(); }, { passive: true });
+
 let cleanup = null;
 let renderId = 0;
 
@@ -104,6 +118,7 @@ async function render() {
   const m = route.re.exec(path);
   const params = Object.fromEntries((route.keys || []).map((k, i) => [k, m[i + 1]]));
   document.body.dataset.theme = route.theme;
+  syncBand(route.theme === 'stage' && route.role === 'student');
   try {
     const mod = await route.load();
     if (id !== renderId) return;

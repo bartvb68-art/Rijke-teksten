@@ -17,6 +17,11 @@ function ac() {
   return ctx;
 }
 
+/** De audiocontext (of null als het geluid uit staat). */
+export function audio() {
+  return ac();
+}
+
 function tone(freq, { type = 'sine', dur = 0.1, vol = 0.08, slide = 0, delay = 0 } = {}) {
   const c = ac();
   if (!c) return;

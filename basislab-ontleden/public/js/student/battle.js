@@ -5,6 +5,8 @@ import { session, setStudentState, go } from '../app.js';
 import { LABELS, gameLabels, gameSentences, makeRng } from '../shared/curriculum.js';
 import { BADGE_BY_ID } from '../shared/rewards.js';
 import { sfx } from '../sound.js';
+import * as band from '../band.js';
+import { burst } from '../fx.js';
 import { hudHtml, bindHud } from './hud.js';
 import { mergeStats, mergeCounts } from '../ontleed-ui.js';
 
@@ -100,6 +102,7 @@ export default async function battle(root) {
     racers().forEach((_, i) => moveRacer(i, 0));
     BANDS.forEach((b, k) => scheduleBand(k + 1, b));
     $('[data-q]').hidden = false;
+    band.setLevel(3);
     nextQuestion();
   }
 
@@ -150,12 +153,14 @@ export default async function battle(root) {
       g.pos[0] += 1;
       moveRacer(0, g.pos[0]);
       $('[data-good]').textContent = g.correct;
-      sfx.note(g.correct);
+      band.strum();
+      if (g.pos[0] >= FINISH - 3) band.setLevel(4);
+      burst(root.querySelector('[data-racer="0"]'), 8);
       if (g.pos[0] >= FINISH) { arrive(0); return; }
       g.locked = true;
       timers.push(setTimeout(() => g.running && nextQuestion(), 350));
     } else {
-      sfx.miss();
+      band.bonk();
       g.locked = true;
       timers.push(setTimeout(() => g.running && nextQuestion(), 2000));
     }
@@ -178,7 +183,9 @@ export default async function battle(root) {
         setStudentState(saved.state);
       } catch (err) { toast(err.message, 'error'); }
     }
-    if (place === 1) sfx.fanfare(); else sfx.step();
+    band.setLevel(2);
+    band.finale();
+    if (place === 1) { setTimeout(() => band.applause(3), 650); setTimeout(() => burst(overlay.querySelector('h2'), 24), 300); } else if (place === 2) setTimeout(() => band.applause(1.5), 650);
     overlay.hidden = false;
     overlay.innerHTML = `<div class="card result">
       <h2>${place === 1 ? 'Jullie winnen de battle!' : `Je werd ${place}e`}</h2>

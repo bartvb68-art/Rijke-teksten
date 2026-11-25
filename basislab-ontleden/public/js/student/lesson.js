@@ -6,6 +6,8 @@ import {
 } from '../shared/curriculum.js';
 import { BADGE_BY_ID } from '../shared/rewards.js';
 import { sfx, speak, canSpeak, stopSpeaking } from '../sound.js';
+import * as band from '../band.js';
+import { burst, wave, bandStripHtml, setBandStrip } from '../fx.js';
 import { hudHtml, bindHud } from './hud.js';
 import { sentenceHtml, solvedHtml, promptFor, labelPill, mergeStats, mergeCounts } from '../ontleed-ui.js';
 
@@ -34,6 +36,7 @@ export default async function lessonView(root, params) {
   let startedAt = 0;
   let resultActions = [];
   let hintOpen = false;
+  let streak = 0;
 
   root.innerHTML = `${hudHtml('kaart')}
   <div class="lesson-page" style="--pc:${podium.color}">
@@ -43,6 +46,7 @@ export default async function lessonView(root, params) {
       <span class="spacer"></span>
       <div class="steps" data-steps></div>
     </div>
+    ${bandStripHtml()}
     <div class="task-card" data-card>
       <div class="press-start" data-overlay></div>
       <div class="task-body">
@@ -95,9 +99,15 @@ export default async function lessonView(root, params) {
     root.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => loadStep(Number(b.dataset.step))));
   }
 
+  function bandLevel(n) {
+    band.setLevel(n);
+    setBandStrip(root, n);
+  }
+
   function loadStep(i) {
     stepIndex = i;
     phase = 'ready';
+    bandLevel(2);
     stopSpeaking();
     items = generateItems(lessonId, i, { groep: session.state.class.groep, levelShift: settings().levelShift || 0, seed: Date.now() });
     renderSteps();
@@ -127,6 +137,8 @@ export default async function lessonView(root, params) {
     tally = { correct: 0, stats: {}, confusions: {} };
     startedAt = Date.now();
     itemIndex = 0;
+    streak = 0;
+    bandLevel(1);
     phase = 'task';
     renderSteps();
     showItem();
@@ -145,16 +157,17 @@ export default async function lessonView(root, params) {
     $('[data-progress]').style.width = `${Math.round((itemIndex / items.length) * 100)}%`;
     $('[data-feedback]').innerHTML = '';
     $('[data-help]').hidden = !step().hints;
-    renderZin();
+    renderZin(null, true);
     renderControls();
     renderHint();
     updateGo();
     if (settings().readAloud && canSpeak() && step().kind === 'intro') speak(it.s.text);
   }
 
-  function renderZin(result = null) {
+  function renderZin(result = null, enter = false) {
     const it = item();
     $('[data-zin]').innerHTML = sentenceHtml(it, st, { result });
+    if (enter) $('[data-zin] .zin')?.classList.add('enter');
     if (result) return;
     root.querySelectorAll('[data-gap]').forEach((b) => b.addEventListener('click', () => toggleCut(Number(b.dataset.gap))));
     root.querySelectorAll('button[data-chunk]').forEach((b) => b.addEventListener('click', () => clickChunk(Number(b.dataset.chunk))));
@@ -201,7 +214,7 @@ export default async function lessonView(root, params) {
   function toggleCut(i) {
     if (phase !== 'task') return;
     st.cuts.has(i) ? st.cuts.delete(i) : st.cuts.add(i);
-    sfx.tick();
+    band.note(i);
     renderZin();
     updateGo();
     root.querySelector(`[data-gap="${i}"]`)?.focus();
@@ -217,7 +230,7 @@ export default async function lessonView(root, params) {
         if (['pv', 'ow', 'lv', 'mv'].includes(it.target)) st.selected.clear();
         st.selected.add(i);
       }
-      sfx.pick();
+      band.note(i + 2);
     } else if (it.mode === 'label') {
       st.active = i;
     }
@@ -226,10 +239,12 @@ export default async function lessonView(root, params) {
     root.querySelector(`[data-chunk="${i}"]`)?.focus();
   }
 
+  const it_labelIndex = (l) => Math.max(0, item().choices.indexOf(l)) + 1;
+
   function setLabel(l) {
     if (phase !== 'task') return;
     st.labels[st.active] = l;
-    sfx.pick();
+    band.note(it_labelIndex(l));
     const next = st.labels.findIndex((x, i) => i > st.active && !x);
     const first = st.labels.findIndex((x) => !x);
     st.active = next >= 0 ? next : first >= 0 ? first : st.active;
@@ -254,7 +269,15 @@ export default async function lessonView(root, params) {
     mergeCounts(tally.confusions, r.confusions);
     phase = 'feedback';
     stopSpeaking();
-    r.correct ? sfx.good() : sfx.error();
+    if (r.correct) {
+      streak += 1;
+      bandLevel(1 + Math.min(3, streak));
+      band.strum();
+    } else {
+      streak = 0;
+      bandLevel(1);
+      band.bonk();
+    }
     renderZin(r);
     renderControls(r);
     $('[data-good]').textContent = tally.correct;
@@ -267,6 +290,10 @@ export default async function lessonView(root, params) {
       ${lines.map((l) => `<p>${esc(l)}</p>`).join('')}</div>`;
     updateGo();
     $('[data-go]').focus();
+    if (r.correct) {
+      wave($('[data-zin] .zin'));
+      burst($('[data-feedback] .feedback h3'), streak >= 3 ? 18 : 10);
+    }
   }
 
   function next() {
@@ -279,6 +306,7 @@ export default async function lessonView(root, params) {
 
   async function finish() {
     phase = 'saving';
+    bandLevel(2);
     stopSpeaking();
     const s = step();
     doneSteps.add(stepIndex);
@@ -344,9 +372,15 @@ export default async function lessonView(root, params) {
       <p class="muted" style="margin-top:12px;font-size:.9rem">Druk op <kbd>Enter</kbd> om verder te gaan</p>
     </div>`);
     overlay.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => resultActions[Number(b.dataset.act)].fn()));
-    if (isTest && stars) for (let i = 0; i < stars; i++) setTimeout(() => sfx.star(i), 350 * i + 100);
-    else sfx.step();
-    if (passed && saved?.unlockedNext) setTimeout(() => sfx.fanfare(), 1300);
+    if (isTest) {
+      band.finale();
+      if (stars) { setTimeout(() => band.applause(stars >= 2 ? 2.8 : 1.6), 650); setTimeout(() => burst(overlay.querySelector('.stars'), 10 + stars * 8), 500); }
+      for (let i = 0; i < (stars || 0); i++) setTimeout(() => sfx.star(i), 350 * i + 100);
+    } else {
+      band.riff(3);
+      setTimeout(() => burst(overlay.querySelector('h2'), 12), 150);
+    }
+    if (passed && saved?.unlockedNext) setTimeout(() => band.riff(5), 1500);
     if (saved?.newBadges?.length) {
       setTimeout(() => {
         modal({
@@ -357,7 +391,7 @@ export default async function lessonView(root, params) {
           }).join('')}</div>`,
           actions: [{ label: 'Hoera!', value: true, primary: true }],
         });
-        sfx.coin();
+        band.riff(4);
       }, isTest ? 1600 : 700);
     }
   }
