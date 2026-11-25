@@ -1,0 +1,51 @@
+// SVG-iconen (geen emoji, zodat alles er op elke computer hetzelfde uitziet).
+const P = {
+  rocket: '<path d="M12 2c3 2 5 6 5 10l-2 4H9l-2-4c0-4 2-8 5-10z"/><circle cx="12" cy="10" r="2"/><path d="M9 16l-3 3 1-5M15 16l3 3-1-5M10 19l2 3 2-3"/>',
+  planet: '<circle cx="12" cy="12" r="6"/><path d="M3 15c3 2 15-2 18-6"/>',
+  diploma: '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M7 9h10M7 12h6"/><circle cx="17" cy="16" r="3"/><path d="M15.5 18.5L15 22l2-1 2 1-.5-3.5"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
+  bolt: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  flame: '<path d="M12 22c4 0 7-3 7-7 0-5-5-7-5-12-3 2-5 5-5 8-1-1-2-2-2-4-1 2-2 4-2 8 0 4 3 7 7 7z"/>',
+  calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M9 15l2 2 4-4"/>',
+  star: '<path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/>',
+  meteor: '<circle cx="15" cy="15" r="5"/><path d="M11 11L3 3M13 9L7 3M9 13L3 7"/>',
+  trophy: '<path d="M7 4h10v5a5 5 0 01-10 0z"/><path d="M7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4M12 14v4M8 21h8M9 18h6"/>',
+  lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>',
+  check: '<path d="M5 12l5 5 9-10"/>',
+  play: '<path d="M7 4l13 8-13 8z"/>',
+  home: '<path d="M3 11l9-8 9 8M5 9v12h14V9"/>',
+  logout: '<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 5-7 8-7s7 2 8 7"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2 20c1-4 4-6 7-6s6 2 7 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14c3 0 5 2 6 5"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+  print: '<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/>',
+  download: '<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  back: '<path d="M15 5l-7 7 7 7"/>',
+  chart: '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-7"/>',
+  key: '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/>',
+  alert: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>',
+  sound: '<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 010 6M19 6a8 8 0 010 12"/>',
+  mute: '<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/>',
+  shop: '<path d="M4 7h16l-1.5 12h-13z"/><path d="M9 7a3 3 0 016 0"/>',
+  pause: '<path d="M8 5v14M16 5v14"/>',
+  coin: '<circle cx="12" cy="12" r="9"/><path d="M12 6l1.6 3.6 3.9.4-2.9 2.6.8 3.9L12 14.6 8.6 16.5l.8-3.9-2.9-2.6 3.9-.4z"/>',
+  medal: '<circle cx="12" cy="15" r="6"/><path d="M8 3l4 6 4-6M12 12v6M9.5 15h5"/>',
+  heart: '<path d="M12 21s-8-5-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 6-8 11-8 11z"/>',
+  shield: '<path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/>',
+  trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14"/>',
+  edit: '<path d="M4 20h4L20 8l-4-4L4 16z"/>',
+  eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+  map: '<path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/>',
+  video: '<rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/>',
+};
+
+export function icon(name, cls = '') {
+  return `<svg class="icon ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[name] || P.star}</svg>`;
+}
+
+export function badgeIcon(name, earned = true) {
+  return `<span class="badge-icon ${earned ? 'earned' : 'locked'}">${icon(earned ? name : 'lock')}</span>`;
+}
