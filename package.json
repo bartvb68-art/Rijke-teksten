@@ -1,8 +1,8 @@
 {
-  "name": "basislab-teksten",
+  "name": "basislab-meestertekst",
   "private": true,
   "version": "1.0.0",
-  "description": "Basislab Teksten – rijke teksten voor de klas, alleen op basis van erkende kinderbronnen.",
+  "description": "Basislab Meestertekst – rijke teksten voor de klas, alleen op basis van erkende kinderbronnen.",
   "type": "module",
   "engines": {
     "node": ">=22.18"

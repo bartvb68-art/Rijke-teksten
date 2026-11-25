@@ -1,6 +1,6 @@
-# Basislab Teksten – teksten.basislab.nl
+# Basislab Meestertekst – meestertekst.basislab.nl
 
-Rijke teksten voor de klas, in de huisstijl van Basislab. De leerkracht kiest een **thema**, **groep (3–8, met AVI-niveau)**,
+Rijke teksten voor de klas, in de huisstijl van Basislab Doorstroom. De leerkracht kiest een **thema**, **groep (3–8, met AVI-niveau)**,
 **tekstsoort** en **lengte**. De app maakt dan:
 
 - een introductie om voor te lezen, plus een video (Klokhuis, Jeugdjournaal, Schooltv…) als die gevonden is,
@@ -33,28 +33,51 @@ Vereist: Node.js 22.18 of hoger.
 ```bash
 npm install
 npm run mock        # testmodus zonder API-sleutel (voorbeeldinhoud) → http://localhost:8080
-cp .env.example .env   # vul ANTHROPIC_API_KEY (en eventueel TOEGANGSCODE) in
-node --env-file=.env server/index.ts
+ANTHROPIC_API_KEY=sk-ant-... npm start
 ```
 
-`npm run check` controleert de TypeScript-code.
+`npm run check` controleert de TypeScript-code. `./maak-zip.sh` maakt `dist/basislab-meestertekst-server.zip` voor de server.
 
 ## Installeren op de TransIP-VPS (naast Basislab Typen)
 
-1. DNS bij TransIP: A-record `teksten` → IP-adres van de VPS.
-2. Zet deze map op de server, bijv. in `/opt/basislab-teksten`, en maak daar een `.env` aan (zie `.env.example`).
-   Kies een **TOEGANGSCODE**: zonder code kan iedereen met de link teksten maken op jouw kosten.
-3. Start de container:
+Zelfde werkwijze als Basislab Ontleden: de app draait als eigen container op het Docker-netwerk van Typen
+(`deploy_default`) en de Caddy van Typen (`deploy-caddy-1`) regelt het webadres en het slotje.
+
+1. **API-sleutel**: maak op https://console.anthropic.com een sleutel aan (Settings → API keys), zet er tegoed op en stel een maandlimiet in.
+2. **DNS bij TransIP**: A-record `meestertekst` → `136.144.142.66`.
+3. **Uploaden** (PowerShell op je eigen computer):
+   ```powershell
+   scp $HOME\Downloads\basislab-meestertekst-server.zip bartvanbergen@136.144.142.66:~
+   ssh bartvanbergen@136.144.142.66
+   ```
+4. **Uitpakken** (op de server):
    ```bash
-   cd /opt/basislab-teksten/deploy && sudo docker compose up -d --build
+   sudo mkdir -p /opt/basislab-meestertekst
+   sudo unzip -o ~/basislab-meestertekst-server.zip -d /opt/basislab-meestertekst
    ```
-   (Heet het netwerk van Typen niet `deploy_default`? Zie `sudo docker network ls` en start met `TYPEN_NETWERK=<naam>`.)
-4. Voeg aan de Caddyfile van Basislab Typen toe en herstart Caddy:
+5. **Instellingen**: vul de API-sleutel en een toegangscode voor leerkrachten in:
+   ```bash
+   cd /opt/basislab-meestertekst/deploy
+   sudo cp .env.example .env && sudo nano .env      # opslaan: Ctrl+O, Enter, Ctrl+X
+   sudo chmod 600 .env
    ```
-   teksten.basislab.nl {
-   	reverse_proxy basislab-teksten-teksten-1:8080
-   }
+6. **Starten**:
+   ```bash
+   sudo docker compose -f naast-typen.yml up -d --build
+   sudo docker ps --format '{{.Names}}  {{.Status}}'   # basislab-meestertekst-meestertekst-1  Up … (healthy)
    ```
+7. **Webadres koppelen** (reservekopie, blok toevoegen, controleren, herladen):
+   ```bash
+   sudo cp /opt/Rijke-teksten/basislab-typen/deploy/Caddyfile /opt/Rijke-teksten/basislab-typen/deploy/Caddyfile.backup
+   printf '\nmeestertekst.basislab.nl {\n\tencode zstd gzip\n\treverse_proxy basislab-meestertekst-meestertekst-1:8080\n}\n' | sudo tee -a /opt/Rijke-teksten/basislab-typen/deploy/Caddyfile
+   sudo docker exec deploy-caddy-1 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+   sudo docker exec deploy-caddy-1 caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+   ```
+   Alleen herladen als de controle `Valid configuration` geeft.
+8. **Testen**: open https://meestertekst.basislab.nl, vul de toegangscode in en maak een tekst.
+
+**Nieuwe versie installeren**: upload de nieuwe zip (stap 3), pak uit (stap 4) en start opnieuw (stap 6).
+Het bestand `.env` blijft staan, want dat zit niet in de zip.
 
 ## Kosten
 

@@ -2,7 +2,7 @@ import { AlignmentType, BorderStyle, Document, ExternalHyperlink, HeadingLevel, 
 import type { Lesmateriaal } from './types.ts';
 import { GROEPEN } from './types.ts';
 
-const ACCENT = 'FF4D2E';
+const ACCENT = '1F5FAE';
 const p = (text: string, opts: { bold?: boolean; italics?: boolean; size?: number; color?: string } = {}) =>
   new Paragraph({ children: [new TextRun({ text, ...opts })], spacing: { after: 160, line: 360 } });
 const kop = (text: string, level: (typeof HeadingLevel)[keyof typeof HeadingLevel] = HeadingLevel.HEADING_2) =>
@@ -20,7 +20,7 @@ export async function maakDocx(m: Lesmateriaal, versie: 'leerling' | 'leerkracht
   const docent = versie === 'leerkracht';
   const kinderen: Paragraph[] = [
     new Paragraph({
-      children: [new TextRun({ text: `Basislab Teksten · ${GROEPEN[m.groep]?.label ?? ''}${docent ? ' · Leerkrachtversie' : ''}`, size: 18, color: '6B6B78' })],
+      children: [new TextRun({ text: `Basislab Meestertekst · ${GROEPEN[m.groep]?.label ?? ''}${docent ? ' · Leerkrachtversie' : ''}`, size: 18, color: '6B6B78' })],
       border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: ACCENT, space: 4 } },
       spacing: { after: 240 },
     }),
@@ -61,7 +61,7 @@ export async function maakDocx(m: Lesmateriaal, versie: 'leerling' | 'leerkracht
   kinderen.push(kop('Bronnen'));
   for (const b of m.bronnen)
     kinderen.push(new Paragraph({ children: [new TextRun(`${b.bron}: `), new ExternalHyperlink({ link: b.url, children: [new TextRun({ text: b.titel, style: 'Hyperlink' })] })], spacing: { after: 80 } }));
-  kinderen.push(new Paragraph({ alignment: AlignmentType.LEFT, children: [new TextRun({ text: 'Gemaakt met Basislab Teksten op basis van erkende kinderbronnen. Controleer de tekst altijd voordat je hem in de klas gebruikt.', size: 16, color: '6B6B78' })], spacing: { before: 300 } }));
+  kinderen.push(new Paragraph({ alignment: AlignmentType.LEFT, children: [new TextRun({ text: 'Gemaakt met Basislab Meestertekst op basis van erkende kinderbronnen. Controleer de tekst altijd voordat je hem in de klas gebruikt.', size: 16, color: '6B6B78' })], spacing: { before: 300 } }));
 
   const doc = new Document({
     styles: { default: { document: { run: { font: 'Verdana', size: 24 } } } },

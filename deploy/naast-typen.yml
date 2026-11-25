@@ -1,0 +1,22 @@
+# Basislab Meestertekst op de VPS, naast Basislab Typen (en Lezen, Doorstroom, Ontleden).
+# De Caddy van Basislab Typen regelt het webadres en het slotje (https) en stuurt
+# meestertekst.basislab.nl door naar deze container.
+# Gebruik: sudo docker compose -f naast-typen.yml up -d --build
+name: basislab-meestertekst
+
+services:
+  meestertekst:
+    build: ..
+    restart: unless-stopped
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?Vul ANTHROPIC_API_KEY in in het bestand .env}
+      TOEGANGSCODE: ${TOEGANGSCODE:?Vul TOEGANGSCODE in in het bestand .env}
+      CLAUDE_MODEL: ${CLAUDE_MODEL:-claude-opus-5-5}
+    networks:
+      typen:
+        aliases: [meestertekst]
+
+networks:
+  typen:
+    external: true
+    name: ${TYPEN_NETWORK:-deploy_default}

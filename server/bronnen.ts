@@ -1,4 +1,4 @@
-// De ENIGE bronnen die Basislab Teksten mag gebruiken.
+// De ENIGE bronnen die Basislab Meestertekst mag gebruiken.
 // Claude kan via de zoekfunctie alleen op deze sites zoeken en lezen; elke link die
 // in het lesmateriaal terechtkomt, wordt daarnaast door de server opnieuw tegen deze lijst gecontroleerd.
 // Een bron toevoegen? Voeg hier een regel toe (domein zonder https://, eventueel met pad).

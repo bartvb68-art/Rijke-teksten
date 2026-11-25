@@ -110,5 +110,5 @@ app.post('/api/docx', vereisCode, async (req, res) => {
 app.get('/gezond', (_req, res) => res.send('ok'));
 
 app.listen(POORT, () => {
-  console.log(`Basislab Teksten draait op http://localhost:${POORT}${MOCK ? ' (testmodus)' : ` (model: ${MODEL})`}`);
+  console.log(`Basislab Meestertekst draait op http://localhost:${POORT}${MOCK ? ' (testmodus)' : ` (model: ${MODEL})`}`);
 });

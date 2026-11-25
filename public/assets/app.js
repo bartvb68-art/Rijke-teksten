@@ -1,4 +1,4 @@
-// Basislab Teksten – voorkant
+// Basislab Meestertekst – voorkant
 const $ = (s, el = document) => el.querySelector(s);
 const SUGGESTIES = ['Bijen', 'Vulkanen', 'Kinderrechten', 'De ruimte', 'Plastic in zee', 'Prinsjesdag', 'De Tweede Wereldoorlog', 'Dinosaurussen', 'Verkiezingen', 'Klimaatverandering'];
 const opslag = {
@@ -291,7 +291,7 @@ function sluitModal() {
 function toonBronnenInfo() {
   openModal(
     h('h2', { id: 'modal-titel' }, 'Alleen erkende bronnen'),
-    h('p', {}, 'Basislab Teksten zoekt en leest alleen op deze websites. Feiten van andere sites worden niet gebruikt en links naar andere sites worden door de server geweigerd.'),
+    h('p', {}, 'Meestertekst zoekt en leest alleen op deze websites. Feiten van andere sites worden niet gebruikt en links naar andere sites worden door de server geweigerd.'),
     h('ul', {}, config.bronnen.map((b) => h('li', {}, h('b', {}, b.naam), ` – ${b.omschrijving} (${b.domein})`))),
     h('p', { class: 'muted klein' }, 'De AI schrijft de tekst zelf, op basis van wat er op deze pagina’s staat. Vindt hij niets over je thema, dan krijg je een melding in plaats van een verzonnen tekst.'),
   );
