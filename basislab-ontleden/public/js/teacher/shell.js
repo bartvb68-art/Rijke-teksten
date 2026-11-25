@@ -7,7 +7,7 @@ export function shell(root, active, content) {
   root.innerHTML = `<div class="t-shell">
     <header class="t-top">
       ${schoolLogoHtml({ size: 34 })}
-      <a class="brand" href="${t ? '#/dashboard' : '#/'}"><img src="/img/icon.svg" alt="">Basislab Ontleden <span class="muted" style="font-weight:500">· volgsysteem</span></a>
+      <a class="brand" href="${t ? '#/dashboard' : '#/'}"><img src="/img/icon.svg" alt=""><span class="brand-text">Basis<span class="lab">lab</span> <span class="prog">Ontleden</span></span> <span class="muted" style="font-weight:500">· volgsysteem</span></a>
       <nav aria-label="Menu">
         ${t ? `<a href="#/dashboard" class="${active === 'dashboard' ? 'active' : ''}">${icon('users')} Mijn klassen</a>` : ''}
         ${t?.is_admin ? `<a href="#/beheer" class="${active === 'beheer' ? 'active' : ''}" data-testid="nav-beheer">${icon('settings')} Beheer</a>` : ''}

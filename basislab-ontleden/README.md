@@ -101,5 +101,5 @@ test/                     tests (node --test)
 
 ## Bronnen en licenties
 
-Code, zinnen, lessen, iconen en tekeningen zijn voor dit project geschreven. Lettertypen Lexend en Fredoka (`public/fonts/`): SIL Open Font License 1.1.
+Code, zinnen, lessen, iconen en tekeningen zijn voor dit project geschreven. Vormgeving volgens de Basislab-huisstijl. Lettertype Poppins (`public/fonts/`, lokaal geserveerd): SIL Open Font License 1.1.
 Geluiden worden in de browser opgewekt; er worden geen externe bibliotheken of geluidsbestanden meegeleverd.

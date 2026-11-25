@@ -150,12 +150,12 @@ export function splitText(s) {
 // ---------- Podia en lessen ----------
 
 export const PODIA = [
-  { id: 1, name: 'Oefenhok', color: '#3987e5', desc: 'Zinsdelen knippen, de persoonsvorm en het onderwerp.' },
-  { id: 2, name: 'Repetitieruimte', color: '#1baf7a', desc: 'Het werkwoordelijk gezegde.' },
-  { id: 3, name: 'Clubpodium', color: '#eda100', desc: 'Het lijdend voorwerp.' },
-  { id: 4, name: 'Festivaltent', color: '#9085e9', desc: 'Het meewerkend voorwerp.' },
-  { id: 5, name: 'Hoofdpodium', color: '#eb6834', desc: 'Bijwoordelijke bepalingen: waar, wanneer, hoe en waarom.' },
-  { id: 6, name: 'Stadion', color: '#e87ba4', desc: 'Het naamwoordelijk gezegde en het ontleeddiploma.' },
+  { id: 1, name: 'Oefenhok', color: '#a68be3', desc: 'Zinsdelen knippen, de persoonsvorm en het onderwerp.' },
+  { id: 2, name: 'Repetitieruimte', color: '#9475dc', desc: 'Het werkwoordelijk gezegde.' },
+  { id: 3, name: 'Clubpodium', color: '#815dd5', desc: 'Het lijdend voorwerp.' },
+  { id: 4, name: 'Festivaltent', color: '#6a3fc8', desc: 'Het meewerkend voorwerp.' },
+  { id: 5, name: 'Hoofdpodium', color: '#5a32b0', desc: 'Bijwoordelijke bepalingen: waar, wanneer, hoe en waarom.' },
+  { id: 6, name: 'Stadion', color: '#472490', desc: 'Het naamwoordelijk gezegde en het ontleeddiploma.' },
 ];
 
 // mode: split | select | label | quiz

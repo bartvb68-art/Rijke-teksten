@@ -2,8 +2,9 @@
 import { esc, fmtDay } from '../lib.js';
 import { LABELS, SKILL_ORDER } from '../shared/curriculum.js';
 
-export const SERIES = { blue: '#2a78d6', aqua: '#1baf7a', orange: '#eb6834', violet: '#6250d6' };
-export const SEQ = ['#cde2fb', '#86b6ef', '#3987e5', '#1c5cab', '#0d366b'];
+// Kleuren uit de Basislab-huisstijl: ontleden-paars, doorstroom-blauw, oranje accent, schooloverzicht-indigo
+export const SERIES = { blue: '#6a3fc8', aqua: '#1f5fae', orange: '#eb5f36', violet: '#3949ab' };
+export const SEQ = ['#ece6f8', '#c6b6ea', '#9a7fdc', '#6a3fc8', '#41208f'];
 
 function niceMax(v) {
   if (v <= 0) return 10;

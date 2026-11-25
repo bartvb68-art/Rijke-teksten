@@ -17,7 +17,7 @@ export function hudHtml(active = '') {
   ];
   return `<header class="hud">
     ${schoolLogoHtml({ size: 36, cls: 'on-dark' })}
-    <a class="brand" href="#/kaart" aria-label="Basislab Ontleden"><img src="/img/icon.svg" alt=""><span class="brand-text">Basislab Ontleden</span></a>
+    <a class="brand" href="#/kaart" aria-label="Basislab Ontleden"><img src="/img/icon.svg" alt=""><span class="brand-text">Basis<span class="lab">lab</span> <span class="prog">Ontleden</span></span></a>
     <nav aria-label="Menu">${nav.map(([id, href, ic, label]) => `<a class="hud-pill ${active === id ? 'active' : ''}" href="${href}">${icon(ic)}${label}</a>`).join('')}</nav>
     <span class="spacer"></span>
     <span class="hud-pill" title="${s.xp} XP">${guitarSvg(s.avatar, { size: 26, waves: false })}<span>${esc(s.name)} · ${esc(rank.name)}</span><span class="xp-bar" aria-label="${pct}% naar volgende rang"><i style="width:${pct}%"></i></span></span>

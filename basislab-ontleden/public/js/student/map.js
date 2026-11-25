@@ -60,11 +60,11 @@ export default async function map(root) {
         <h3>Spellen</h3>
         ${st.gamesUnlocked ? '' : `<p class="muted">${st.class.settings.gamesEnabled ? `Haal les ${GAMES_UNLOCK_LESSON} om de spellen te openen.` : 'Je leerkracht heeft de spellen even uitgezet.'}</p>`}
         <a class="game-card ${st.gamesUnlocked ? '' : 'locked'}" href="#/spel/notenregen" data-testid="game-notenregen">
-          <span class="gi" style="background:linear-gradient(135deg,#e87ba4,#9c3b63)">${icon('note')}</span>
+          <span class="gi" style="background:var(--ontleden)">${icon('note')}</span>
           <span><strong>Notenregen</strong><small>Record: ${st.stats.notenregenRecord} punten</small></span>
         </a>
         <a class="game-card ${st.gamesUnlocked ? '' : 'locked'}" href="#/spel/battle" data-testid="game-battle">
-          <span class="gi" style="background:linear-gradient(135deg,#3987e5,#184f95)">${icon('mic')}</span>
+          <span class="gi" style="background:var(--accent)">${icon('mic')}</span>
           <span><strong>Bandbattle</strong><small>Speel tegen 3 andere bands</small></span>
         </a>
       </div>
