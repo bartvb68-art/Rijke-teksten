@@ -121,17 +121,17 @@ export function defaultPlan(startDay, toetsDay, holidays = DEFAULT_HOLIDAYS) {
   const work = weeks.filter((w) => !holidays.includes(w));
   weeks.forEach((w) => {
     if (holidays.includes(w)) {
-      plan[w] = { focus: [], goal: 0, test: false, holiday: true, note: 'Vakantie: oefenen mag, hoeft niet.' };
+      plan[w] = { focus: [], goal: 0, test: false, homework: false, homeworkCount: 15, holiday: true, note: 'Vakantie: oefenen mag, hoeft niet.' };
       return;
     }
     const idx = work.indexOf(w);
     const fromEnd = work.length - 1 - idx;
     if (fromEnd === 0) {
-      plan[w] = { focus: [], goal: 30, test: false, holiday: false, note: 'Toetsweek: rustig herhalen. Succes!' };
+      plan[w] = { focus: [], goal: 30, test: false, homework: false, homeworkCount: 15, holiday: false, note: 'Toetsweek: rustig herhalen. Succes!' };
     } else if (fromEnd === 1 || (fromEnd === 4 && work.length > 6)) {
-      plan[w] = { focus: [], goal: 60, test: true, holiday: false, note: 'Proeftoets en herhaling van je zwakste onderdelen.' };
+      plan[w] = { focus: [], goal: 60, test: true, homework: false, homeworkCount: 15, holiday: false, note: 'Proeftoets en herhaling van je zwakste onderdelen.' };
     } else {
-      plan[w] = { focus: [rk[i % rk.length], rk[(i + 4) % rk.length], tv[i % tv.length], lz[i % lz.length]], goal: 60, test: false, holiday: false, note: '' };
+      plan[w] = { focus: [rk[i % rk.length], rk[(i + 4) % rk.length], tv[i % tv.length], lz[i % lz.length]], goal: 60, test: false, homework: false, homeworkCount: 15, holiday: false, note: '' };
       i += 1;
     }
   });

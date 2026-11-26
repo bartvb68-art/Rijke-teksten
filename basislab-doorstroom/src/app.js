@@ -8,6 +8,7 @@ import {
   startTheta, domainTheta, chooseSkill, targetDifficulty, testPlan, testResult, studentSummary, weeklyDomainSeries, stripHtml, thetaFor,
 } from './engine.js';
 import { generate, publicItem, grade } from './content/index.js';
+import { buildSheet, defaultSkillsFor, SOORTEN } from './worksheets.js';
 import { LEZEN_SIZES } from './content/lezen.js';
 import { BANK_SIZES } from './content/taal.js';
 import {
@@ -474,6 +475,8 @@ export function createApp({ db, now = () => Date.now(), signupCode = process.env
         focus: Array.isArray(v.focus) ? [...new Set(v.focus.filter((x) => SKILL_BY_ID[x]))].slice(0, 8) : [],
         goal: int(v.goal ?? 0, { min: 0, max: 500, name: 'weekdoel' }),
         test: !!v.test,
+        homework: !!v.homework,
+        homeworkCount: int(v.homeworkCount ?? 15, { min: 5, max: 40, name: 'aantal huiswerkopgaven' }),
         holiday: !!v.holiday,
         note: typeof v.note === 'string' ? v.note.trim().slice(0, 300) : '',
       };
@@ -757,6 +760,49 @@ export function createApp({ db, now = () => Date.now(), signupCode = process.env
     }
     q('UPDATE teachers SET name = ?, school = ? WHERE id = ?').run(name, school, tid);
     return { ok: true };
+  });
+
+  // Werkbladen
+  function sheetFor(student, cls, { soort, skills, count }) {
+    const abilities = loadAbilities(student.id);
+    const wk = currentWeek(cls, now());
+    const chosen = skills && skills.length ? skills : defaultSkillsFor(soort, wk, student.settings, abilities);
+    const seen = new Set(loadAnswers(student.id, now() - 60 * DAY).map((a) => a.item_key));
+    const sheet = buildSheet({ soort, skills: chosen, count, seen, thetaFor: (sk) => thetaFor(abilities, sk, student.settings) });
+    return { student: { id: student.id, name: student.name }, ...sheet };
+  }
+  route('GET', '/api/teacher/classes/:id/werkbladen', ({ req, params, query }) => {
+    const cls = teacherClass(requireRole(req, 'teacher').user_id, Number(params.id));
+    const soort = String(query.get('soort') || 'huiswerk');
+    if (!SOORTEN[soort]) throw bad('Onbekend soort werkblad');
+    const skill = query.get('skill');
+    if (skill && !SKILL_BY_ID[skill]) throw bad('Onbekend onderdeel');
+    if (soort !== 'huiswerk' && !skill) throw bad('Kies een onderdeel voor dit werkblad');
+    const wk = currentWeek(cls, now());
+    let ids = String(query.get('students') || '').split(',').map(Number).filter(Boolean);
+    if (!ids.length && soort !== 'huiswerk') {
+      const g = classOverview(cls).groups.find((x) => x.skill === skill);
+      ids = (soort === 'remediering' ? g.instructie : g.verrijking).map((x) => x.id);
+    }
+    const all = q('SELECT id FROM students WHERE class_id = ? ORDER BY name').all(cls.id).map((r) => r.id);
+    if (!ids.length) ids = soort === 'huiswerk' ? all : [];
+    ids = ids.filter((x) => all.includes(x)).slice(0, 60);
+    const count = int(Number(query.get('count') || (soort === 'huiswerk' ? (wk.homeworkCount || 15) : 12)), { min: 4, max: 40, name: 'aantal opgaven' });
+    return {
+      class: { id: cls.id, name: cls.name }, week: { week: wk.week, focus: wk.focus || [] }, soort, skill: skill || null,
+      sheets: ids.map((sid) => sheetFor(loadStudent(sid), cls, { soort, skills: skill ? [skill] : null, count })),
+    };
+  });
+  route('GET', '/api/student/huiswerk', ({ req }) => {
+    const sid = requireRole(req, 'student').user_id;
+    const s = loadStudent(sid);
+    const cls = loadClass(s.class_id);
+    const wk = currentWeek(cls, now());
+    if (!wk.homework) throw new HttpError(404, 'Er is deze week geen huiswerkpakket.');
+    const sheet = sheetFor(s, cls, { soort: 'huiswerk', skills: null, count: wk.homeworkCount || 15 });
+    // leerlingen krijgen het blad zonder antwoorden
+    for (const sec of sheet.sections) for (const it of sec.items) { delete it.answer; delete it.explain; }
+    return { class: { name: cls.name }, week: { week: wk.week }, sheets: [sheet] };
   });
 
   // Beheerder

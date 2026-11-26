@@ -19,15 +19,15 @@ export function mountainSvg(route, currentIndex) {
     return `<g><title>Week ${i + 1}${w.holiday ? ' (vakantie)' : ''}${w.test ? ' · proeftoets' : ''}${w.goal ? ` · ${w.done}/${w.goal}` : ''}</title>
       <circle cx="${x}" cy="${y}" r="${cur ? 11 : 8}" fill="${fill}" stroke="#1b1d26" stroke-width="2"/>
       ${w.test ? `<text x="${x}" y="${y + 4}" text-anchor="middle" font-size="10" font-weight="700" fill="#1b1d26">T</text>` : done ? `<path d="M${x - 4},${y} l3,3 l5,-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/>` : ''}
-      ${cur ? `<g transform="translate(${x + 14},${y - 34})"><circle cx="8" cy="6" r="6" fill="#1f5fae"/><path d="M0 28 q8 -20 16 0z" fill="#1f5fae"/><path d="M15 12 l6 16" stroke="#6b4f2a" stroke-width="2"/></g>
+      ${cur ? `<g transform="translate(${x + 14},${y - 34})"><circle cx="8" cy="6" r="6" fill="#1F5FAE"/><path d="M0 28 q8 -20 16 0z" fill="#1F5FAE"/><path d="M15 12 l6 16" stroke="#6b4f2a" stroke-width="2"/></g>
         <text x="${x + 38}" y="${y - 6}" class="flag-label">jij bent hier</text>` : ''}
     </g>`;
   }).join('');
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Bergroute naar de doorstroomtoets: week ${currentIndex + 1} van ${route.length}">
-    <rect width="${W}" height="${H}" fill="#dbe8f4"/>
-    <path d="M-10 ${H} L120 150 L210 220 L400 22 L500 150 L${W + 10} 120 L${W + 10} ${H} Z" fill="#a9c2dc"/>
+    <rect width="${W}" height="${H}" fill="#E2EAF4"/>
+    <path d="M-10 ${H} L120 150 L210 220 L400 22 L500 150 L${W + 10} 120 L${W + 10} ${H} Z" fill="#AAC2E0"/>
     <path d="M400 22 L366 62 L382 58 L398 72 L418 56 L432 62 Z" fill="#fff"/>
-    <path d="M-10 ${H} L60 250 L170 280 L300 200 L460 290 L${W + 10} 250 L${W + 10} ${H} Z" fill="#88ad8b"/>
+    <path d="M-10 ${H} L60 250 L170 280 L300 200 L460 290 L${W + 10} 250 L${W + 10} ${H} Z" fill="#C9D8EC"/>
     <path d="${path}" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-dasharray="1 12"/>
     ${steps}
   </svg>`;

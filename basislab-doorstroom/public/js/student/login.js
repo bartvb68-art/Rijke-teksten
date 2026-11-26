@@ -10,7 +10,7 @@ export default function studentLogin(root) {
   function stepCode(error = '') {
     box(`<p style="text-align:left"><a href="#/" class="muted">${icon('back')} Terug</a></p>
       ${schoolLogoHtml({ size: 56, withName: true })}
-      <img src="/img/icon.svg" alt="" width="72" height="72" style="margin:0 auto">
+      <img src="/img/basislab-doorstroom-logo.png" alt="Basislab Doorstroom" width="180" height="180" style="margin:0 auto">
       <h1>Klaar voor de klim?</h1>
       <p class="muted">Typ de <b>klascode</b> van je inlogkaart.</p>
       <form>

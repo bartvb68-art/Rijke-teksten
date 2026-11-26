@@ -9,7 +9,8 @@ export default function landing(root) {
     <section class="landing-hero">
       <div>
         ${schoolLogoHtml({ size: 56, withName: true })}
-        <h1>Basislab <span>Doorstroom</span></h1>
+        <img class="landing-logo" src="/img/basislab-doorstroom-logo.png" alt="Basislab Doorstroom" width="360" height="360">
+        <h1 class="sr-only">Basislab Doorstroom</h1>
         <p class="lead">Elke week een stukje hoger, op weg naar de doorstroomtoets. Oefen rekenen, taalverzorging en lezen op je eigen niveau.</p>
         <div class="landing-choice">
           <a class="choice" href="#/leerling" data-testid="choose-student">${icon('mountain')}<strong>Ik ben leerling</strong><span>Log in met je klascode en wachtwoord.</span></a>
@@ -23,6 +24,6 @@ export default function landing(root) {
       <div class="card feature">${icon('calendar')}<h3>Per week ingericht</h3><p>De leerkracht kiest per week de focus en het weekdoel tot aan de toets, met proeftoetsen in de stijl van de doorstroomtoets.</p></div>
       <div class="card feature">${icon('users')}<h3>Volgsysteem</h3><p>Niveau per leerling en onderdeel, foutenanalyse, signalen en voorstellen voor instructiegroepjes.</p></div>
     </section>
-    <p class="landing-foot"><a href="#/uitleg">${icon('help')} Handleiding</a><span>Alle gegevens blijven op de server van de school. Geen advertenties, geen trackers.</span></p>
+    <p class="landing-foot"><a href="#/uitleg">Naar de handleiding →</a><span>Alle gegevens blijven op de server van de school. Geen advertenties, geen trackers.</span></p>
   </div>`;
 }

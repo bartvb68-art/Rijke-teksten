@@ -48,8 +48,8 @@ function overzicht(body, data, id) {
     </div>
     <div class="grid2">
       <section class="card stack">
-        <div class="card-head"><h2>Deze week</h2><span class="muted">${wk.index >= 0 ? `week ${wk.index + 1} van ${wk.total} · ${esc(weekLabel(wk.week))}` : ''}</span><span class="spacer"></span><a class="btn btn-sm" href="#/klas/${id}/planning">${icon('edit')} Planning</a></div>
-        <div class="focus-chips">${wk.holiday ? '<span class="chip">vakantie</span>' : ''}${wk.test ? `<span class="chip good">${icon('test')} proeftoets staat open</span>` : ''}${(wk.focus || []).map(skillLabel).join('')}</div>
+        <div class="card-head"><h2>Deze week</h2><span class="muted">${wk.index >= 0 ? `week ${wk.index + 1} van ${wk.total} · ${esc(weekLabel(wk.week))}` : ''}</span><span class="spacer"></span><a class="btn btn-sm" href="#/klas/${id}/werkblad/huiswerk">${icon('print')} Huiswerkpakket</a><a class="btn btn-sm" href="#/klas/${id}/planning">${icon('edit')} Planning</a></div>
+        <div class="focus-chips">${wk.holiday ? '<span class="chip">vakantie</span>' : ''}${wk.test ? `<span class="chip good">${icon('test')} proeftoets staat open</span>` : ''}${wk.homework ? `<span class="chip good">${icon('print')} huiswerkpakket aan</span>` : ''}${(wk.focus || []).map(skillLabel).join('')}</div>
         <p style="margin:0">Weekdoel: <b>${wk.goal || 0} opgaven</b> per leerling${wk.note ? ` · <i>${esc(wk.note)}</i>` : ''}</p>
         <div class="table-wrap"><table class="list"><thead><tr><th>Leerling</th><th>Weektaak</th><th class="r">% goed</th></tr></thead><tbody>
           ${data.students.slice().sort((a, b) => a.week.done / (a.week.goal || 1) - b.week.done / (b.week.goal || 1)).map((st) => `<tr><td><a class="name" href="#/leerling/${st.id}">${esc(st.name)}</a></td>
@@ -141,15 +141,16 @@ function vaardigheden(body, data, id) {
 }
 
 // ---------- Instructiegroepjes ----------
-function groepjes(body, data) {
+function groepjes(body, data, id) {
   const groups = data.groups.slice().sort((a, b) => (b.focus - a.focus) || (b.instructie.length - a.instructie.length));
   const withSomething = groups.filter((g) => g.instructie.length || g.verrijking.length);
   const names = (list) => (list.length ? list.map((s) => `<a class="name-chip" href="#/leerling/${s.id}" title="score ${thetaFmt(s.theta)}">${esc(s.name)}</a>`).join('') : '<span class="muted">–</span>');
-  body.innerHTML = `<div class="row no-print" style="margin-bottom:12px"><p class="muted" style="margin:0;max-width:70ch">Voorstellen op basis van het niveau per onderdeel (na minstens 5 opgaven). <b>Instructie</b>: score onder 2,4 (onder of net op 1F). <b>Verrijking</b>: score 3,8 of hoger (2F/1S). De focus van deze week staat bovenaan.</p><span class="spacer"></span><button class="btn btn-sm" data-print>${icon('print')} Afdrukken</button></div>
+  body.innerHTML = `<div class="row no-print" style="margin-bottom:12px"><p class="muted" style="margin:0;max-width:70ch">Voorstellen op basis van het niveau per onderdeel (na minstens 5 opgaven). <b>Instructie</b>: score onder 2,4 (onder of net op 1F). <b>Verrijking</b>: score 3,8 of hoger (2F/1S). De focus van deze week staat bovenaan. Per groep print je een <b>oefenblad</b> met uitleg en opgaven op het niveau van elke leerling.</p><span class="spacer"></span><button class="btn btn-sm" data-print>${icon('print')} Afdrukken</button></div>
     ${withSomething.length ? `<div class="grid3">${withSomething.map((g) => `<div class="card group-card">
       <div class="row">${skillLabel(g.skill)}${g.focus ? '<span class="chip good">focus deze week</span>' : ''}</div>
       <div><div class="label">Extra instructie (${g.instructie.length})</div><div class="names">${names(g.instructie)}</div></div>
       <div><div class="label">Verrijking (${g.verrijking.length})</div><div class="names">${names(g.verrijking)}</div></div>
+      <div class="row no-print" style="gap:6px">${g.instructie.length ? `<a class="btn btn-sm btn-primary" href="#/klas/${id}/werkblad/remediering/${g.skill}">${icon('print')} Oefenblad instructiegroep</a>` : ''}${g.verrijking.length ? `<a class="btn btn-sm" href="#/klas/${id}/werkblad/verrijking/${g.skill}">${icon('print')} Verrijkingsblad</a>` : ''}</div>
     </div>`).join('')}</div>` : '<div class="card"><p class="muted">Er zijn nog te weinig gegevens. Zodra leerlingen per onderdeel een paar opgaven hebben gemaakt, verschijnen hier de groepjes.</p></div>'}`;
   body.querySelector('[data-print]').addEventListener('click', () => window.print());
 }
@@ -170,7 +171,7 @@ async function planning(body, data, id) {
           <div class="field" style="margin:0"><label for="p-toets">Datum doorstroomtoets</label><input id="p-toets" type="date" value="${p.toets}"><span class="hint">2027: tussen 25 januari en 12 februari (papier: 26 en 27 januari).</span></div>
           <div class="row" style="align-items:flex-end"><button class="btn btn-primary" data-save ${dirty ? '' : 'disabled'}>${icon('check')} Planning opslaan</button><button class="btn btn-ghost btn-sm" data-reset>Standaardplanning</button></div>
         </div>
-        <p class="muted" style="margin:0">Per week kies je de onderdelen waar de weektaak zich op richt (70% van de opgaven), het weekdoel en of de proeftoets openstaat. De andere 30% herhaalt automatisch wat voor iedere leerling nog lastig is. Een weekdoel per leerling stel je in bij de leerling.</p>
+        <p class="muted" style="margin:0">Per week kies je de onderdelen waar de weektaak zich op richt (70% van de opgaven), het weekdoel en of de proeftoets openstaat. De andere 30% herhaalt automatisch wat voor iedere leerling nog lastig is. Een weekdoel per leerling stel je in bij de leerling. Met <b>Huiswerkpakket</b> kunnen leerlingen die week een werkblad op hun eigen niveau printen; jij kunt ze ook voor de hele klas printen.</p>
       </div>
       <div class="plan-list">${weeks.map((w, i) => {
         const e = { ...p.plan[w], ...(edits[w] || {}) };
@@ -180,7 +181,9 @@ async function planning(body, data, id) {
           <div class="stack" style="gap:8px">
             ${hol ? '<span class="muted">Vakantie: leerlingen mogen oefenen, maar er is geen weektaak.</span>' : `<div class="focus-chips">${e.focus.length ? e.focus.map(skillLabel).join('') : '<span class="muted">Geen focus: herhaling van zwakke onderdelen</span>'}</div>
             <div class="row" style="gap:14px"><label class="row" style="gap:6px">Weekdoel <input type="number" min="0" max="500" step="5" value="${e.goal}" data-goal style="width:90px"> opgaven</label>
-              <label class="check" style="padding:0"><input type="checkbox" data-test ${e.test ? 'checked' : ''}><span>Proeftoets open</span></label></div>
+              <label class="check" style="padding:0"><input type="checkbox" data-test ${e.test ? 'checked' : ''}><span>Proeftoets open</span></label>
+              <label class="check" style="padding:0"><input type="checkbox" data-hw ${e.homework ? 'checked' : ''}><span>Huiswerkpakket</span></label>
+              ${e.homework ? `<label class="row" style="gap:6px"><input type="number" min="5" max="40" step="1" value="${e.homeworkCount || 15}" data-hwcount style="width:80px"> opgaven</label><a class="btn btn-ghost btn-sm" href="#/klas/${id}/werkblad/huiswerk">${icon('print')} Bekijken</a>` : ''}</div>
             <input data-note placeholder="Bericht voor de leerlingen (optioneel)" value="${esc(e.note || '')}" maxlength="300">`}
           </div>
           <div class="row" style="gap:6px;flex-direction:column;align-items:stretch">
@@ -196,6 +199,8 @@ async function planning(body, data, id) {
       const cur = () => ({ ...p.plan[w], ...(edits[w] || {}) });
       row.querySelector('[data-goal]')?.addEventListener('input', (e) => { edits[w] = { ...cur(), goal: Number(e.target.value) || 0 }; mark(); });
       row.querySelector('[data-test]')?.addEventListener('change', (e) => { edits[w] = { ...cur(), test: e.target.checked }; mark(); });
+      row.querySelector('[data-hw]')?.addEventListener('change', (e) => { edits[w] = { ...cur(), homework: e.target.checked }; mark(); render(); });
+      row.querySelector('[data-hwcount]')?.addEventListener('input', (e) => { edits[w] = { ...cur(), homeworkCount: Number(e.target.value) || 15 }; mark(); });
       row.querySelector('[data-note]')?.addEventListener('input', (e) => { edits[w] = { ...cur(), note: e.target.value }; mark(); });
       row.querySelector('[data-hol]').addEventListener('click', () => {
         if (holidays.has(w)) holidays.delete(w); else holidays.add(w);
@@ -229,7 +234,7 @@ async function planning(body, data, id) {
     try {
       const start = body.querySelector('#p-start').value; const toets = body.querySelector('#p-toets').value;
       const weeks = {};
-      for (const [w, e] of Object.entries(edits)) weeks[w] = { focus: e.focus, goal: e.goal, test: e.test, holiday: holidays.has(w), note: e.note };
+      for (const [w, e] of Object.entries(edits)) weeks[w] = { focus: e.focus, goal: e.goal, test: e.test, homework: !!e.homework, homeworkCount: Math.max(5, Math.min(40, e.homeworkCount || 15)), holiday: holidays.has(w), note: e.note };
       p = await api('PUT', `/api/teacher/classes/${id}/plan`, { start, toets, holidays: [...holidays], weeks });
       for (const k of Object.keys(edits)) delete edits[k];
       holidays = new Set(p.holidays || []);

@@ -6,7 +6,7 @@ import { canSpeak } from '../speak.js';
 export function studentShell(root, content, { active = '' } = {}) {
   const st = session.state;
   root.innerHTML = `<header class="s-top">
-      <a class="brand" href="#/start"><img src="/img/icon.svg" alt="">Basislab Doorstroom</a>
+      <a class="brand" href="#/start"><img src="/img/icon.svg" alt=""><span class="wordmark">Basis<span class="lab">lab</span> <span class="prog">Doorstroom</span></span></a>
       ${schoolLogoHtml({ size: 30 })}
       <span class="spacer"></span>
       <nav class="row" aria-label="Menu" style="gap:6px">

@@ -69,6 +69,8 @@ const ROUTES = [
   { re: /^\/account$/, load: () => import('./teacher/account.js'), theme: 'teacher', role: 'teacher' },
   { re: /^\/klas\/(\d+)$/, keys: ['classId'], load: () => import('./teacher/class.js'), theme: 'teacher', role: 'teacher' },
   { re: /^\/klas\/(\d+)\/(\w+)$/, keys: ['classId', 'tab'], load: () => import('./teacher/class.js'), theme: 'teacher', role: 'teacher' },
+  { re: /^\/klas\/(\d+)\/werkblad\/(huiswerk|remediering|verrijking)(?:\/([a-z-]+))?$/, keys: ['classId', 'soort', 'skill'], load: () => import('./teacher/werkbladen.js'), theme: 'print', role: 'teacher' },
+  { re: /^\/huiswerk$/, load: () => import('./student/huiswerk.js'), theme: 'print', role: 'student' },
   { re: /^\/klas\/(\d+)\/kaarten\/print$/, keys: ['classId'], load: () => import('./teacher/cards.js'), theme: 'print', role: 'teacher' },
   { re: /^\/leerling\/(\d+)$/, keys: ['studentId'], load: () => import('./teacher/student.js'), theme: 'teacher', role: 'teacher' },
 ];
@@ -89,7 +91,7 @@ async function render() {
   if (session.role === 'teacher' && session.teacher?.must_change && path !== '/account') { location.hash = '#/account'; return; }
   if (path === '/' && session.role) { location.hash = session.role === 'teacher' ? '#/dashboard' : '#/start'; return; }
   const m = route.re.exec(path);
-  const params = Object.fromEntries((route.keys || []).map((k, i) => [k, decodeURIComponent(m[i + 1])]));
+  const params = Object.fromEntries((route.keys || []).map((k, i) => [k, m[i + 1] == null ? undefined : decodeURIComponent(m[i + 1])]));
   document.body.dataset.theme = route.theme;
   try {
     const mod = await route.load();

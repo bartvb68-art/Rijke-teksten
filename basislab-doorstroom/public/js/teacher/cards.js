@@ -10,7 +10,7 @@ export default async function cards(root, params) {
   let list = [];
   try { list = JSON.parse(sessionStorage.getItem(`bd_cards_${classId}`) || '[]'); } catch { list = []; }
   const url = `${location.origin}/`;
-  const logo = session.school?.logo ? `<img src="/api/school/logo?v=${encodeURIComponent(session.school.logo)}" alt="" style="width:64px;height:64px;object-fit:contain">` : '<img src="/img/icon.svg" alt="" width="64" height="64">';
+  const logo = session.school?.logo ? `<img src="/api/school/logo?v=${encodeURIComponent(session.school.logo)}" alt="" style="width:64px;height:64px;object-fit:contain">` : '<img src="/img/basislab-doorstroom-logo.png" alt="" width="72" height="72">';
 
   function render() {
     root.innerHTML = `<div class="print-page">

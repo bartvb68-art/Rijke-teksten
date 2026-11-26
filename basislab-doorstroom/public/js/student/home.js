@@ -43,9 +43,10 @@ export default async function home(root) {
           return `<div class="focus-item"><i style="background:var(--${s.domain})"></i><span>${esc(s.name)}<span class="muted"> · ${esc(s.desc)}</span></span><span class="muted num">${n}×</span></div>`;
         }).join('')}</div></div>` : '<p class="muted" style="margin:0">Deze week herhaal je de onderdelen die nog lastig zijn.</p>'}
         <div class="big-actions">
-          <a class="btn btn-primary btn-big" href="#/oefenen/week" data-testid="start-week">${icon('play')} ${goalDone ? 'Nog meer oefenen' : p.done ? 'Verder met je weektaak' : 'Start je weektaak'}</a>
+          <a class="btn btn-accent btn-big" href="#/oefenen/week" data-testid="start-week">${icon('play')} ${goalDone ? 'Nog meer oefenen' : p.done ? 'Verder met je weektaak' : 'Start je weektaak'}</a>
           ${st.test.active ? `<a class="btn btn-big" href="#/proeftoets">${icon('test')} Verder met de proeftoets (${st.test.active.pos}/${st.test.active.total})</a>`
             : st.test.available ? `<a class="btn btn-big" href="#/proeftoets" data-testid="start-test">${icon('test')} Proeftoets maken</a>` : ''}
+          ${wk.homework ? `<a class="btn btn-big" href="#/huiswerk" data-testid="homework">${icon('print')} Huiswerk printen</a>` : ''}
         </div>
       </div>
       <div class="mountain">${mountainSvg(st.route, idx)}${mountainLegend()}</div>

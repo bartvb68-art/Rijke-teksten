@@ -45,7 +45,10 @@ await t('POST', '/api/auth/teacher/register', { name: 'Juf Marieke', email: 'dem
 const cls = await t('POST', '/api/teacher/classes', { name: 'Groep 8a', groep: 8, settings: { start, toets: '2027-01-26' } });
 db.prepare("UPDATE classes SET code = 'BERG-42K', created_at = ? WHERE id = ?").run(REAL_NOW - 25 * 86400000, cls.id);
 // Twee weken geleden stond de proeftoets open
-await t('PUT', `/api/teacher/classes/${cls.id}/plan`, { weeks: { [addDays(start, 7)]: { focus: ['rk-breuk', 'rk-procent', 'tv-ww', 'lz-begrijpend'], goal: 60, test: true, note: 'Deze week ook de eerste proeftoets!' } } });
+await t('PUT', `/api/teacher/classes/${cls.id}/plan`, { weeks: {
+  [addDays(start, 7)]: { focus: ['rk-breuk', 'rk-procent', 'tv-ww', 'lz-begrijpend'], goal: 60, test: true, note: 'Deze week ook de eerste proeftoets!' },
+  [thisMonday]: { focus: ['rk-komma', 'rk-meetkunde', 'tv-grammatica', 'lz-informatie'], goal: 60, homework: true, homeworkCount: 20, note: 'Deze week kun je ook een huiswerkblad printen.' },
+} });
 db.prepare('INSERT INTO teachers (email, name, school, pass_hash, created_at, is_admin) VALUES (?, ?, ?, ?, ?, 0)').run('ahmed@basislab.nl', 'Meester Ahmed', 'Basisschool De Klimop', hashPassword('basislab-doorstroom'), REAL_NOW);
 
 const NAMES = ['Aya', 'Bram', 'Daan', 'Emma', 'Fatima', 'Finn', 'Isa', 'Jesse', 'Julia', 'Lars', 'Liam', 'Lotte', 'Mehmet', 'Mila', 'Noah', 'Noor', 'Sara', 'Sem', 'Thijs', 'Yara', 'Zoë', 'Luuk', 'Hanna', 'Ravi'];

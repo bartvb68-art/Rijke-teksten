@@ -12,6 +12,16 @@ Adaptieve voorbereiding op de **doorstroomtoets (IEP)** voor groep 8, met een **
 - **Mijn niveau**: niveaumeter per vakgebied, niveau per onderdeel, groei per week en de laatste fouten met het goede antwoord.
 - Toegankelijk: voorleesknop (spraak van de browser), grotere letters, extra letter- en regelruimte, werkt op tablet en telefoon. Meerkeuze ook met de toetsen A–D of 1–4.
 
+## Werkbladen
+
+- **Huiswerkpakket bij de weektaak** (optie per week in de weekplanning): per leerling een A4-werkblad op het eigen niveau met de onderdelen van de weektaak, standaard 15 opgaven. Leerlingen printen het zelf via *Huiswerk printen* (zonder antwoorden); de leerkracht print de hele klas met nakijkblad via *Overzicht › Huiswerkpakket*.
+- **Remediërende oefenbladen** bij *Instructiegroepjes*: per leerling in de instructiegroep een blad met uitleg (regel, stappen, uitgewerkt voorbeeld; `public/js/shared/uitleg.js`) en opgaven die onder het eigen niveau beginnen en oplopen. Daarnaast een **verrijkingsblad** voor de verrijkingsgroep.
+- Op de leerlingpagina: een werkblad voor één leerling. Elke keer printen geeft nieuwe opgaven.
+
+## Huisstijl
+
+Volgt de Basislab-huisstijl (november 2026): Poppins (lokaal geserveerd, `public/fonts/`), wit en zacht grijsblauw (#EEF1F6) als ondergrond, programmakleur Doorstroom #1F5FAE met tint #E2EAF4 en middentint #AAC2E0, oranje #EB5F36 als enig accent (de hoofdknop in #C2441C), afgeronde hoeken van 8, 12 en 20 px, en het programmalogo uit de huisstijl (`public/img/`). De vakgebieden binnen Doorstroom hebben eigen kleuren (rekenen blauw, taalverzorging oker, lezen groen) die niet botsen met de kleuren van de andere Basislab-programma's.
+
 ## Inhoud (18 onderdelen)
 
 | Vakgebied | Onderdelen | Oefenstof |

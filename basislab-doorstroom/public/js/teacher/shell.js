@@ -6,7 +6,7 @@ export function shell(root, active, content) {
   const t = session.teacher;
   root.innerHTML = `<div class="t-shell">
     <header class="t-top">
-      <a class="brand" href="${t ? '#/dashboard' : '#/'}"><img src="/img/icon.svg" alt="">Basislab Doorstroom <span class="muted" style="font-weight:500">· volgsysteem</span></a>
+      <a class="brand" href="${t ? '#/dashboard' : '#/'}"><img src="/img/icon.svg" alt=""><span class="wordmark">Basis<span class="lab">lab</span> <span class="prog">Doorstroom</span></span> <span class="muted" style="font-weight:500">· volgsysteem</span></a>
       ${schoolLogoHtml({ size: 30 })}
       <nav aria-label="Menu">
         ${t ? `<a href="#/dashboard" class="${active === 'dashboard' ? 'active' : ''}">${icon('users')} Mijn klassen</a>` : ''}

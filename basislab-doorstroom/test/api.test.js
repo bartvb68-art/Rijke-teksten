@@ -169,3 +169,37 @@ test('beveiliging: zonder header geweigerd, andere leerkracht ziet klas niet', a
     assert.equal((await t2('GET', `/api/teacher/classes/${cls.id}`)).status, 404);
   } finally { env.close(); }
 });
+
+test('werkbladen: huiswerk, remediëring en leerlingversie zonder antwoorden', async () => {
+  const env = await setup();
+  try {
+    const { t, s, cls, students } = await classWithStudent(env);
+    // zonder huiswerkoptie kan de leerling niets printen
+    assert.equal((await s('GET', '/api/student/huiswerk')).status, 404);
+    const plan = (await t('GET', `/api/teacher/classes/${cls.id}/plan`)).data;
+    const put = await t('PUT', `/api/teacher/classes/${cls.id}/plan`, { weeks: { [plan.current]: { focus: ['rk-procent', 'tv-ww', 'lz-begrijpend'], goal: 60, homework: true, homeworkCount: 15 } } });
+    assert.equal(put.status, 200, JSON.stringify(put.data));
+    const hw = await t('GET', `/api/teacher/classes/${cls.id}/werkbladen?soort=huiswerk`);
+    assert.equal(hw.status, 200, JSON.stringify(hw.data));
+    assert.equal(hw.data.sheets.length, 2);
+    const sh = hw.data.sheets[0];
+    assert.deepEqual(sh.sections.map((x) => x.skill), ['rk-procent', 'tv-ww', 'lz-begrijpend']);
+    assert.ok(sh.sections[2].passage, 'leestekst staat op het blad');
+    assert.ok(sh.sections[0].items.every((it) => it.answer != null), 'leerkracht krijgt antwoorden');
+    const keys = sh.sections.flatMap((x) => x.items.map((it) => it.prompt + (it.figure || '')));
+    assert.equal(new Set(keys).size, keys.length, 'geen dubbele opgaven');
+    const mine = await s('GET', '/api/student/huiswerk');
+    assert.equal(mine.status, 200);
+    assert.ok(mine.data.sheets[0].sections.every((x) => x.items.every((it) => it.answer === undefined && it.explain === undefined)), 'leerling krijgt geen antwoorden');
+    // remediëring voor één leerling met uitleg, opgaven oplopend
+    const rem = await t('GET', `/api/teacher/classes/${cls.id}/werkbladen?soort=remediering&skill=rk-breuk&students=${students[0].id}&count=10`);
+    assert.equal(rem.status, 200, JSON.stringify(rem.data));
+    const sec = rem.data.sheets[0].sections[0];
+    assert.ok(sec.uitleg && sec.uitleg.stappen.length);
+    assert.equal(sec.items.length, 10);
+    const lv = sec.items.map((it) => it.level);
+    assert.deepEqual(lv, [...lv].sort((a, b) => a - b));
+    assert.equal((await t('GET', `/api/teacher/classes/${cls.id}/werkbladen?soort=remediering`)).status, 400);
+    assert.equal((await s('GET', `/api/teacher/classes/${cls.id}/werkbladen?soort=huiswerk`)).status, 401);
+  } finally { env.close(); }
+});

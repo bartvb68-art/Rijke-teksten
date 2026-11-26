@@ -89,6 +89,7 @@ export default async function studentView(root, { studentId }) {
         <section class="card stack">
           <h2>Account</h2>
           <form data-rename class="row"><input name="name" value="${esc(st.name)}" aria-label="Naam" style="flex:1"><button class="btn" type="submit">Naam wijzigen</button></form>
+          <div class="row"><a class="btn" href="#/klas/${c.id}/werkblad/huiswerk?leerlingen=${st.id}">${icon('print')} Werkblad op eigen niveau</a></div>
           <div class="row"><button class="btn" data-pw>${icon('key')} Nieuw wachtwoord</button><button class="btn" data-card>${icon('print')} Inlogkaart</button></div>
           <div><div class="label">Niveau opnieuw laten bepalen</div><p class="muted" style="margin:4px 0 8px;font-size:.88rem">Gebruik dit als het startniveau duidelijk niet klopte. De score gaat terug naar het startniveau; de antwoorden blijven bewaard.</p>
             <div class="row">${DOMAINS.map((dm) => `<button class="btn btn-sm" data-relevel="${dm.id}">${esc(dm.name)}</button>`).join('')}</div></div>

@@ -6,7 +6,7 @@ import { niveauLegend } from './ui.js';
 
 export default function uitleg(root) {
   shell(root, 'uitleg', `
-  <h1>Handleiding Basislab Doorstroom</h1>
+  <h1>Handleiding Basis<span style="color:var(--brand)">lab</span> <span style="color:var(--doorstroom)">Doorstroom</span></h1>
   <p class="muted" style="max-width:75ch">Basislab Doorstroom bereidt groep 8 voor op de doorstroomtoets (IEP). Leerlingen oefenen rekenen, taalverzorging en lezen; de site past de moeilijkheid steeds aan. Jij plant per week de focus en volgt de klas.</p>
   <div class="grid3" style="margin-top:16px">
     <section class="card"><h2>${icon('calendar')} Elke week</h2><ol style="padding-left:18px;margin:0">
@@ -36,6 +36,12 @@ export default function uitleg(root) {
       <li><b>Daling bij …</b>: de score is in twee weken duidelijk gezakt.</li>
       <li><b>Klikt snel door</b>: antwoorden binnen enkele seconden, met veel fouten.</li></ul></section>
   </div>
+  <section class="card" style="margin-top:16px"><h2>${icon('print')} Werkbladen</h2>
+    <ul style="padding-left:18px;margin:0">
+      <li><b>Huiswerkpakket</b>: zet het per week aan bij <i>Weekplanning</i>. Leerlingen zien dan op hun startscherm <i>Huiswerk printen</i>, met een blad op hun eigen niveau over de onderdelen van de weektaak (zonder antwoorden). Bij <i>Overzicht › Huiswerkpakket</i> print je de bladen voor de hele klas, met nakijkblad.</li>
+      <li><b>Oefenblad voor een instructiegroep</b>: bij <i>Instructiegroepjes</i> print je per onderdeel een blad voor elke leerling in de groep: eerst een korte uitleg met een uitgewerkt voorbeeld, daarna opgaven die onder het eigen niveau beginnen en langzaam moeilijker worden. Er is ook een <b>verrijkingsblad</b> voor de verrijkingsgroep.</li>
+      <li><b>Eén leerling</b>: op de pagina van de leerling maak je een werkblad op diens eigen niveau.</li>
+      <li>Elke keer printen geeft nieuwe opgaven. Opgaven die de leerling de afgelopen weken al online maakte, komen er zo min mogelijk op.</li></ul></section>
   <section class="card" style="margin-top:16px"><h2>Voor leerlingen</h2>
     <p>Leerlingen gaan naar de website, kiezen <i>Ik ben leerling</i>, typen de klascode en kiezen hun naam. Op het startscherm zien ze hun weektaak, hun route naar de toets en hun niveau. Na elke opgave krijgen ze direct uitleg. Ze kunnen ook zelf een onderdeel kiezen. Thuis oefenen kan met dezelfde inlog.</p></section>
   <p class="muted" style="margin-top:16px">Privacy: alle gegevens staan op de server van de school. Van leerlingen wordt alleen de voornaam en de oefengegevens bewaard. Er zijn geen trackers, advertenties of externe diensten.</p>
